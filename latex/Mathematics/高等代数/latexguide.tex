@@ -1,0 +1,104 @@
+\documentclass{MathNoteCN}
+\usepackage{graphicx}%可以加图片
+\usepackage{physics2}
+\usephysicsmodule{ab}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\title{ \LaTeX Guide}
+\begin{document}. 
+\section{数学公式}
+段落内的叫''行内公式'', 用$...$括起来, 例如$x^2+y^2=z^2$. 
+
+独立成行的叫''行间公式'', 用\[\]括起来，例如
+\[
+x^2+y^2=z^2
+\]
+
+如果需要输入上标需要给整体加花括号, 例如$x^{ln2}$. 
+
+如果需要输入下标, 也需要加花括号, 例如$x_{i,j}$.
+
+用frac命令可以输入分数, 例如$\frac{1}{2}$.
+
+但是看着太小了所以通常会用dfrac命令, 例如$\dfrac{1}{2}$.%d for display
+
+行间公式一般默认使用dfrac
+
+有一些例外情况, 例如分式的分子和分母都很复杂, 用dfrac会导致公式过大, 用frac有些太小了, 这时候就需要用tfrac命令了, 例如
+$x^{\tfrac{1}{2}}$. 
+
+类似的,积分上下限中的分数也可以用tfrac命令, 例如
+\[
+\int_{0}^{\tfrac{1}{2}}x^2\, \mathrm{d}x.%标准数学文献中d不需要斜体,所以使用\mathrm{d}x
+\]
+
+\section{括号}
+括号可以用left和right命令来自动调整大小, 例如
+\[
+\left( \dfrac{1}{2}, \dfrac{3}{4} \right) 
+\]
+如果只需要一侧括号, 那么在另一侧可以使用点号, 例如
+\[
+\left( \dfrac{1}{2}, \dfrac{3}{4} \right. 
+\]
+
+在我们调用physics2包后, 可以使用ab命令, 直接自适应括号大小, 例如
+\[
+\ab(\dfrac{1}{2}, \dfrac{3}{4})
+\]
+
+\section{分段函数}
+分段函数可以使用cases环境来输入, 例如
+\[
+f(x) =
+\begin{dcases}
+    x^2, & x \ge 0 \\
+    x-1, & x < 0. %&可以用来对齐上下行
+\end{dcases}
+\]
+
+\section{更多的大写符号}
+
+\begin{align*}
+\sum_{i=1}^n i &= \dfrac{n(n+1)}{2}. \\
+\prod_{i=1}^n i &= n!. \\
+\bigcup_{i=1}^n A_i &= \ab\{x:\exists i\in\{1,\cdots, n\}, \, x\in A_i\}. \\
+\bigcap_{i=1}^n A_i &= \ab\{x:\forall i\in\{1,\cdots, n\}, \, x\in A_i\}. \\
+\end{align*}
+
+\section{常见符号}
+
+\begin{enumerate}
+    \item 积分符号：$\int$
+    \item 求和符号：$\sum$
+    \item 乘积符号：$\prod$
+    \item 存在符号：$\exists$
+    \item forall符号: $\forall$
+    \item 真符号：$\top$
+    \item 假符号：$\bot$
+    \item 不等于符号：$A\ne B$
+    \item 小于等于符号：$A\le B$
+    \item 大于等于符号：$A\ge B$
+    \item 整除符号：$A\div B$
+    \item 余号符号：$A\mod B$
+    \item 取整符号：$\lfloor A \rfloor$
+    \item 上限取整符号：$\lceil A \rceil$
+    \item 开方符号：$\sqrt{A}$
+    \item 最大符号：$\max(A,B)$
+    \item 最小符号：$\min(A,B)$
+    \item 逻辑与符号：$\land$
+    \item 逻辑或符号：$\lor$
+    \item 逻辑非符号：$\lnot$
+    \item 波浪线符号：$\tilde{a}$
+    \item ˆ符号：$\hat{a}$
+    \item 下划线符号：$\underline{a}$
+    \item 下划线符号：$\underbrace{11111}_{5\, \text{个}}$
+\end{enumerate}
+
+另外, 极限的写法$\lim\limits_{x\to a}f(x)=L$
+
+\section{列表}
+enumerate环境可以用来创建有序列表; 
+
+itemize环境可以用来创建无序列表;
+\end{document}

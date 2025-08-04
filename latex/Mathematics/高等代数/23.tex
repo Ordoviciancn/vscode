@@ -1,6 +1,6 @@
 \section{Cauchy-Binet公式}
 \begin{theorem}{}{}
-$A$,$B$为n阶方阵，则$|AB|=|A|\times|B|$
+$A$,$B$为n阶方阵, 则$|AB|=|A|\times|B|$
 \end{theorem}
 \begin{proof}{}{}
 矩阵
@@ -14,21 +14,21 @@ $\begin{bmatrix}
 -I_n & B \\
 \end{bmatrix}$
 由于第三类初等变换不改变行列式的值，所以两个矩阵的行列式相等；
-其中第二分块行左乘A加到第一分块行上，就可以得到目标矩阵
+其中第二分块行左乘A加到第一分块行上, 就可以得到目标矩阵
 
 但是此时实际上运用了循环论证，是不严谨的。
 只需要证明任何分块矩阵的第三类初等变换可以分解为若干次普通矩阵的第三类初等变换即可。
 \end{proof}
 
 设$A$是$m\times n$矩阵，$B$是$n\times m$矩阵，求
-$\begin{matrix}
+$\begin{pmatrix}
 A & B \\
-\end{matrix}$
+\end{pmatrix}$
 的行列式？
 
 \begin{theorem}{}{}
-（1）若$m>n$，则$|AB|= 0$；\\
-（2）若$m\leq n$，则
+ (1)若$m>n$，则$|AB|= 0$; \\
+ (2)若$m\leq n$，则
     \[
     \det(AB) = \sum_{1\leq j_1<j_2<\dots<j_m\leq n} 
     A\begin{pmatrix}
@@ -67,15 +67,15 @@ A & B \\
     -I_n & B \\
   \end{vmatrix}$
 
-  下面先计算等式右边的行列式，对其前$m$行进行Laplace展开：
+  下面先计算等式右边的行列式，对其前$m$行进行Laplace展开; 
   \[RHS=|AB|(-1)^{1+2+\dots+m+(n+1)+\dots+(n+m)}|-I_n|=(-1)^{n(m+1)}|AB|\]
 
   接下来计算左边的行列式，分两种情况：
-  (1)若$m>n$，则包含在前m行的任意m阶子式至少又一列为0，从而值为0，根据Laplace定理，左边的行列式为0
+  (1)若$m>n$, 则包含在前m行的任意m阶子式至少又一列为0, 从而值为0, 根据Laplace定理, 左边的行列式为0
 
   从而$|AB|=0$
 
-  (2)若$m\leq n$，对前m行进行Laplace展开：
+  (2)若$m\leq n$, 对前m行进行Laplace展开; 
   \[LHS=\sum_{1\leq j_1<j_2<\dots<j_m\leq n}
   A\begin{pmatrix}
     1 & 2 & \dots & m \\
@@ -97,10 +97,13 @@ A & B \\
 
   $e_i=\begin{pmatrix}
     0 \\
-    \dots\\
+    \vdots\\
     1\\
-    \dots\\
+    \vdots\\
     0\\
   \end{pmatrix}$
   第i个标准单位列向量
 \end{proof}
+
+
+
