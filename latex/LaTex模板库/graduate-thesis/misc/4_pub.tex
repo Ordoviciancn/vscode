@@ -1,0 +1,53 @@
+%%
+% BIThesis 研究生学位论文模板 The BIThesis Template for Graduate Thesis
+% This file has no copyright assigned and is placed in the Public Domain.
+%%
+
+% ==== 攻读学位期间发表论文与研究成果清单 ====
+% 1. 在 `../reference/pub.bib` 中添加数据。
+% 2. 在本文件下方 `\addpubs` 添加该文献（参考下方示例）。
+
+% **注意：如果发现渲染出来的文献编号不正确，请同时使用以下两个方式解决：**
+% 1. 请清除缓存重新编译，比如`latexmk -gg`，详见 https://bithesis.bitnp.net/faq/clean.html 。
+% 2. 请确保无编译错误。
+
+\begin{publications}
+
+  % **默认情况下，这里的内容将按照学校要求，以发表时间排序。**
+  % - 如果想要按照引用顺序排序，可在`main.tex`设置`publications/sorting = false`。
+  % - 如果想要微调，详见 https://bithesis.bitnp.net/faq/bib-sort.html#sortkey 。
+  % 更多信息请参考「bithesis.pdf」手册。
+  \addpubs{myCiteKey,myCiteKey2,dummy:1,dummy:2}
+
+  % 主要针对硕士生
+  \printbibliography[heading=none,category=mypub,resetnumbers=true]
+
+  % 如果想要分为多个列表，可以使用以下的命令。
+  % 主要针对博士生。
+  % \pubsection{文章}
+  % \printbibliography[heading=none,type=article,category=mypub,resetnumbers=true]{}
+  %
+  % \pubsection{一些书}
+  % \printbibliography[heading=none,type=book,category=mypub,resetnumbers=true,notkeyword=dummy]
+  %
+  % \pubsection{另一些书}
+  % \printbibliography[heading=none,type=book,category=mypub,keyword=dummy,resetnumbers=true]
+  %
+  % 关于 \printbibliography 的筛选参数：
+  % 0. 请保留“category=mypub”。（这样只列出成果，不列出正文参考文献。）
+  % 1. 设置“type=…”，每次只输出某一类型。
+  % 2. 若需继续细分，请在 pub.bib 的条目里记录“keywords = {…, …}”，然后在此用“keyword=…”筛选。
+  % 3. 如果还有要求，可用notkeyword、subtype等筛选方法，请参考 biblatex 手册。
+
+  % 如果想绕过 pub.bib 直接记录项目（例如获奖），请参考以下内容，
+  % 定义一个能和 \printbibliography 共存的列表。
+  % https://bithesis.bitnp.net/faq/pub-manual.html
+  % \zihao{5} % 字号改为五号
+  % \renewcommand{\labelenumi}{[\theenumi]} % 编号改用中括号
+  %
+  % \begin{enumerate}[nosep, leftmargin=4ex-2pt, labelsep=1ex]
+  %   \setcounter{enumi}{4} % 下一项为 5。
+  %   \item 于《新青年》发表论文一篇，本人第一作者。
+  %   \item 于\textit{La Jeunesse}发表论文一篇，导师第一作者，本人第二作者。
+  % \end{enumerate}
+\end{publications}
