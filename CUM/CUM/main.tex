@@ -322,6 +322,114 @@ d(x,y)=\sqrt{\sum (x_i-y_i)^2}
     \end{tabular}
 \end{table}
 
+\section{问题二模型建立与求解}
+
+\subsection{符号说明}
+\begin{itemize}
+\item $i = 1,\dots,6$: 蔬菜品类编号.
+\item $t = 1,\dots,7$: 未来一周(2023-07-01 至 2023-07-07)的日期编号.
+\item $Q_{i,t}$: 第 $i$ 类蔬菜在第 $t$ 天的实际销量(单位: kg).
+\item $P_{i,t}$: 第 $i$ 类蔬菜在第 $t$ 天的零售单价(单位: 元/kg).
+\item $C_{i,t}$: 第 $i$ 类蔬菜在第 $t$ 天的批发单价(单位: 元/kg).
+\item $S_{i,t}$: 第 $i$ 类蔬菜在第 $t$ 天的补货量(决策变量, 单位: kg).
+\item $m_{i,t}$: 第 $i$ 类蔬菜在第 $t$ 天的成本加成率(决策变量, 无量纲).
+      \[
+      P_{i,t}=C_{i,t}(1+m_{i,t}).
+      \]
+\item $\delta_i$: 第 $i$ 类蔬菜的折扣系数(由历史数据给定, 无量纲).
+\item $e_i$: 第 $i$ 类蔬菜的损耗率(由历史数据给定, 无量纲).
+\item $Q_{i,t}^{\min}, Q_{i,t}^{\max}$: 第 $i$ 类蔬菜在第 $t$ 天的最低、最高历史日销量(单位: kg).
+\item $P_{i}^{\min}, P_{i}^{\max}$: 第 $i$ 类蔬菜近两个月的最低、最高历史日销售单价(单位: 元/kg).
+\end{itemize}
+
+\subsection{广义加性模型 (GAM)} 
+以 7 天为周期构造周期样条基函数，捕捉销量对价格、时间、加成率等的非线性关系：
+\begin{equation}
+\log Q_{i,t} = \beta_{i,0} 
++ f_{i,1}\bigl(\log P_{i,t}\bigr) 
++ f_{i,2}(t) 
++ f_{i,3}(m_{i,t}) 
++ \varepsilon_{i,t},
+\label{eq:GAM}
+\end{equation}
+其中 $f_{i,\cdot}(\cdot)$ 为光滑函数（周期样条），$\varepsilon_{i,t}$ 为 GAM 残差.
+
+\subsection{ARIMA 残差修正}
+对残差序列 $\{\varepsilon_{i,t}\}$ 建立 ARIMA$(p,d,q)$ 模型：
+\begin{equation}
+\Phi_i(L)(1-L)^d\,\varepsilon_{i,t} = \Theta_i(L)\eta_{i,t},
+\qquad \eta_{i,t}\sim\mathcal{N}(0,\sigma_{\eta,i}^2),
+\label{eq:ARIMA}
+\end{equation}
+其中 $L$ 为滞后算子，$\Phi_i(L)$、$\Theta_i(L)$ 分别为自回归与滑动平均多项式.
+
+\subsection{组合预测}
+将 GAM 主趋势与 ARIMA 残差预测叠加，得到最终销量预测：
+\begin{equation}
+\widehat{Q}_{i,t} = \exp\!\left[\widehat{\log Q}_{i,t}^{\text{GAM}}
++ \widehat{\varepsilon}_{i,t}^{\text{ARIMA}}\right].
+\label{eq:Qhat}
+\end{equation}
+
+\subsection{收益最大化模型}
+\subsubsection{目标函数}
+未来一周总收益最大化：
+\begin{equation}
+\max_{\{S_{i,t},m_{i,t}\}}
+\sum_{i=1}^6\sum_{t=1}^7
+\Bigl[\,Q_{i,t}\,P_{i,t}-S_{i,t}\,C_{i,t}\Bigr],
+\label{eq:obj}
+\end{equation}
+其中
+\begin{itemize}
+\item $Q_{i,t}$ 由 \eqref{eq:Qhat} 给出；
+\item $P_{i,t}=C_{i,t}(1+m_{i,t})$；
+\item 实际销量与补货量、损耗、折扣之间的关系：
+      \begin{equation}
+      Q_{i,t} = S_{i,t}(1-e_i)\delta_i.
+      \label{eq:Q_S}
+      \end{equation}
+\end{itemize}
+
+将 \eqref{eq:Q_S} 代入 \eqref{eq:obj}，消去 $Q_{i,t}$，得到仅以决策变量 $S_{i,t},m_{i,t}$ 表示的目标函数：
+\begin{equation}
+\max_{\{S_{i,t},m_{i,t}\}}
+\sum_{i=1}^6\sum_{t=1}^7
+\Bigl[\,S_{i,t}(1-e_i)\delta_i\,C_{i,t}(1+m_{i,t})-S_{i,t}\,C_{i,t}\Bigr].
+\label{eq:obj_simp}
+\end{equation}
+
+\subsubsection{约束条件}
+\begin{enumerate}
+\item 销量可行域：
+      \[
+      Q_{i,t}^{\min} \le S_{i,t}(1-e_i)\delta_i \le Q_{i,t}^{\max},
+      \qquad \forall i,t.
+      \]
+\item 定价可行域：
+      \[
+      P_{i}^{\min} \le C_{i,t}(1+m_{i,t}) \le P_{i}^{\max},
+      \qquad \forall i,t.
+      \]
+\item 非负补货：
+      \[
+      S_{i,t} \ge 0,\qquad \forall i,t.
+      \]
+\item 加成率上下限（可根据业务经验设定）：
+      \[
+      m_{i}^{\min} \le m_{i,t} \le m_{i}^{\max},
+      \qquad \forall i,t.
+      \]
+\end{enumerate}
+
+\subsection{求解步骤}
+\begin{enumerate}
+\item 步骤1: 使用历史数据估计 GAM \eqref{eq:GAM} 与 ARIMA \eqref{eq:ARIMA}，得到 $\widehat{Q}_{i,t}$.
+\item 步骤2: 将 $\widehat{Q}_{i,t}$ 代入 \eqref{eq:Q_S} 反解 $S_{i,t}$，作为初始可行解.
+\item 步骤3: 以 \eqref{eq:obj_simp} 为目标，在约束条件下进行非线性规划（如 SQP 或遗传算法），得到最优 $\{S_{i,t}^*,m_{i,t}^*\}$.
+\item 步骤4: 输出未来一周各品类的日补货量 $S_{i,t}^*$ 与定价策略 $P_{i,t}^*=C_{i,t}(1+m_{i,t}^*)$.
+\end{enumerate}
+
 %参考文献
 \begin{thebibliography}{9}%宽度9
     \bibitem[1]{liuhaiyang2013latex}
