@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.4.3)  26 AUG 2025 11:58
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.4.3)  26 AUG 2025 14:32
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1006,12 +1006,6 @@ File: src/BIT/trans-logo.png Graphic file (type bmp)
 ]
 File: src/BIT/color-logo.png Graphic file (type bmp)
 <src/BIT/color-logo.png>
-File: 失业率.png Graphic file (type bmp)
-<失业率.png>
-
-Overfull \vbox (7.16595pt too high) detected at line 32
- []
-
 
 
 File: src/BIT/color-logo.png Graphic file (type bmp)
@@ -1021,8 +1015,10 @@ File: src/BIT/color-logo.png Graphic file (type bmp)
 ]
 File: src/BIT/color-logo.png Graphic file (type bmp)
 <src/BIT/color-logo.png>
-File: 收入提高.png Graphic file (type bmp)
-<收入提高.png>
+File: essay1.png Graphic file (type bmp)
+<essay1.png>
+File: essay2.png Graphic file (type bmp)
+<essay2.png>
 
 
 File: src/BIT/color-logo.png Graphic file (type bmp)
@@ -1068,7 +1064,7 @@ File: ai_impact_on_jobs_pie.png Graphic file (type bmp)
 File: ai_linked_roles_growth.png Graphic file (type bmp)
 <ai_linked_roles_growth.png>
 
-Overfull \vbox (0.39813pt too high) detected at line 95
+Overfull \vbox (0.39813pt too high) detected at line 97
  []
 
 
@@ -1090,7 +1086,7 @@ File: src/BIT/trans-logo.png Graphic file (type bmp)
 File: src/BIT/color-logo.png Graphic file (type bmp)
 <src/BIT/color-logo.png>
 
-Underfull \hbox (badness 10000) in paragraph at lines 110--110
+Underfull \hbox (badness 10000) in paragraph at lines 112--112
 
  []
 
@@ -1133,7 +1129,7 @@ File: beamericonarticle.pdf Graphic file (type pdf)
 File: beamericonarticle.pdf Graphic file (type pdf)
 <use beamericonarticle.pdf>
 
-Overfull \vbox (15.42099pt too high) detected at line 134
+Overfull \vbox (15.42099pt too high) detected at line 136
  []
 
 
@@ -1159,11 +1155,11 @@ File: src/BIT/color-logo.png Graphic file (type bmp)
 File: src/BIT/trans-logo.png Graphic file (type bmp)
 <src/BIT/trans-logo.png>
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <24.88> on input line 146.
+(Font)              <24.88> on input line 148.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <20.74> on input line 146.
+(Font)              <20.74> on input line 148.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <17.28> on input line 146.
+(Font)              <17.28> on input line 148.
 
 
 File: src/BIT/trans-logo.png Graphic file (type bmp)
@@ -1193,11 +1189,11 @@ Package rerunfilecheck Info: File `pre.out' has not changed.
 (rerunfilecheck)             Checksum: 5F1259F5B32D4B0A648A160BE9458FBB;431.
  ) 
 Here is how much of TeX's memory you used:
- 31318 strings out of 473832
- 673761 string characters out of 5733159
+ 31333 strings out of 473832
+ 674837 string characters out of 5733159
  1087340 words of memory out of 5000000
- 53709 multiletter control sequences out of 15000+600000
- 596654 words of font info for 135 fonts, out of 8000000 for 9000
+ 53723 multiletter control sequences out of 15000+600000
+ 596662 words of font info for 136 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  128i,13n,123p,456b,778s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
