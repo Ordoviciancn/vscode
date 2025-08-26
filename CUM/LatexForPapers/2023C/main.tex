@@ -863,6 +863,60 @@ S_{i,t}(1-e_i) \cdot  \delta_i=Q_{i,t}
 \item 步骤4: 输出未来一周各品类的日补货量 $S_{i,t}^*$ 与定价策略 $P_{i,t}^*=C_{i,t}(1+m_{i,t}^*)$.
 \end{enumerate}
 
+\section{问题三模型分析与求解}
+
+\subsection{模型构建}
+
+\subsubsection{已知参数}
+\begin{table}[h]
+    \centering
+    \begin{tabular}{ll}
+        \toprule
+        参数符号 & 含义 \\
+        \midrule
+        \( R_i \) & 第\( i \)个单品的需求量 \\
+        \( \gamma_i \) & 第\( i \)个单品的加成率 \\
+        \( \alpha_i, \beta_i, \phi_i \) & 第\( i \)个单品的打折比例、折扣系数、损耗率 \\
+        \( P_i^{\min}, P_i^{\max} \) & 第\( i \)个单品6月24-30日的最低、最高日销售单价 \\
+        \( Q_i^{\min} \) & 第\( i \)个单品6月24-30日的最低日销售量 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsubsection{决策变量}
+\begin{itemize}
+    \item \( S_i \)：第\( i \)个单品的补货量,满足\( S_i \geq 2.5\ \text{kg} \)
+    \item \( P_i \)：第\( i \)个单品的销售单价
+\end{itemize}
+
+\subsubsection{优化目标}
+以商超总收益最大化为目标,目标函数为:
+\[
+\max = \sum_{i=1}^{n} \left[ (k \cdot f(p) + C) P_i - \frac{1}{1 + \gamma_i} S_i P_i \right]
+\]
+其中,\( (k \cdot f(p) + C) P_i \)反映与价格相关的收入部分,\( \frac{1}{1 + \gamma_i} S_i P_i \)为单品的成本部分,目标函数即总收益(收入减去成本)的最大化。
+
+\subsubsection{约束条件}
+1. 需求匹配约束
+    \begin{itemize}
+        \item 实际可售量范围约束:\( \min(Q_i^{\min}, 2.5\ \text{kg}) \leq (1 - \theta_i) S_i(t) \leq R_i \),其中\( (1 - \theta_i) S_i(t) \)为考虑损耗等因素后的实际可售量,需介于最低需求与总需求量之间。
+        \item 价格区间约束:\( P_i^{\min} \leq P_i \leq P_i^{\max} \),即单品销售单价需在历史最低与最高单价范围内。
+    \end{itemize}
+2. 单品总数约束:\( 27 \leq n \leq 33 \),确保入选单品数量在指定范围内。
+
+上述约束中,单品总数、最低补货量及价格区间为硬性约束,需求匹配约束可在一定程度上灵活调整,以避免模型求解出现极端最优解。若最优解仅在极端情况下可实现,仍允许其作为最终方案。
+
+\subsection{求解思路}
+\begin{enumerate}[label=1.]
+    \item 数据预处理:基于6月24-30日数据计算各单品的日均销量、毛利率、损耗率等参数,确定\( R_i, \gamma_i, \phi_i, P_i^{\min}, P_i^{\max}, Q_i^{\min} \)等基础参数。
+    \item 聚类筛选:通过K-means聚类按"品类—替代关系"分组,每组选取1-2个高毛利高销量单品,初步筛选出满足品类全覆盖且数量在27-33之间的单品集合。
+    \item 模型求解:以总收益最大化为目标,在上述约束条件下,通过优化算法(如线性规划、整数规划或启发式算法)求解决策变量\( S_i \)(补货量)和\( P_i \)(销售单价)的最优值。
+    \item 结果验证:检查最优解是否满足所有约束条件,若存在极端解且符合问题允许条件,则确认其为最终方案;否则调整约束或筛选条件重新求解。
+\end{enumerate}
+
+通过上述模型分析与求解步骤,可得到7月1日各单品的最优补货量和定价策略,实现商超在满足需求与约束条件下的收益最大化。
+
+
 %参考文献
 \begin{thebibliography}{9}%宽度9
     \bibitem[1]{liuhaiyang2013latex}

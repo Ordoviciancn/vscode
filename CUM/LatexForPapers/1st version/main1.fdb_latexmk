@@ -1,0 +1,20 @@
+# Fdb version 4
+["pdflatex"] 1755332069.46861 "v:/vscode/CUM/LatexForPapers/1st version/main1.tex" "main1.pdf" "main1" 1755332070.41268 2
+  "cumcmthesis.cls" 1694175961 25747 161e8e19f87ce152f305afdb0171bd30 ""
+  "main1.aux" 1755332069 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
+  "main1.tex" 1755332064 18284 95d330680b0ac0e46cfdf3c24c0fa21a ""
+  "v:/texlive/2025/texmf-dist/fonts/map/fontname/texfonts.map" 1743615994 3524 cb3e574dea2d1052e39280babc910dc8 ""
+  "v:/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmr12.tfm" 1743614470 1288 655e228510b4c2a1abe905c368440826 ""
+  "v:/texlive/2025/texmf-dist/tex/generic/iftex/iftex.sty" 1743616806 7984 7dbb9280f03c0a315425f1b4f35d43ee ""
+  "v:/texlive/2025/texmf-dist/tex/generic/iftex/ifxetex.sty" 1743616806 488 4565444a3e75e59cb2702dc42e18f482 ""
+  "v:/texlive/2025/texmf-dist/tex/latex/base/article.cls" 1743617206 20144 63d8bacaf52e5abf4db3bc322373e1d4 ""
+  "v:/texlive/2025/texmf-dist/tex/latex/base/size12.clo" 1743617206 8449 ffe4ba2166a344827c3a832d1d5e0a91 ""
+  "v:/texlive/2025/texmf-dist/web2c/texmf.cnf" 1743613482 42148 61becc7c670cd061bb319c643c27fdd4 ""
+  "v:/texlive/2025/texmf-var/web2c/pdftex/pdflatex.fmt" 1743622636 3346122 9b34739581377da7ad3d4316be9671f8 ""
+  "v:/texlive/2025/texmf.cnf" 1743622307 713 e69b156964470283e0530f5060668171 ""
+  "v:/vscode/CUM/LatexForPapers/1st version/main1.tex" 1755332064 18284 95d330680b0ac0e46cfdf3c24c0fa21a ""
+  (generated)
+  "main1.aux"
+  "main1.log"
+  "main1.pdf"
+  (rewritten before read)
