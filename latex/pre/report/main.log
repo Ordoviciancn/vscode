@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.4.3)  27 AUG 2025 08:54
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.4.3)  27 AUG 2025 10:19
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -769,8 +769,7 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \float@box=\box85
 \@float@everytoks=\toks46
 \@floatcapt=\box86
-)
-No file main.aux.
+) (./main.aux)
 \openout1 = `main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 9.
@@ -850,6 +849,7 @@ LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
 (Font)                  OT1/cmss/bx/n --> TU/lmss/b/n on input line 9.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
 (Font)                  OT1/cmtt/m/n --> TU/lmtt/b/n on input line 9.
+
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
 *geometry* verbose mode - [ preamble ] result:
@@ -885,13 +885,11 @@ LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 Package hyperref Info: Link coloring OFF on input line 9.
+(./main.out) (./main.out)
 \@outlinefile=\write4
 \openout4 = `main.out'.
 
-
-Package hyperref Warning: Rerun to get /PageLabels entry.
-
-(./cover.tex
+ (./cover.tex
 
 LaTeX Font Warning: Font shape `TU/KaiTi(0)/b/n' undefined
 (Font)              using `TU/KaiTi(0)/m/n' instead on input line 15.
@@ -926,145 +924,27 @@ File: cover_2.png Graphic file (type bmp)
 LaTeX Warning: No \author given.
 
 
-LaTeX Warning: Citation `chen2025' on page 4 undefined on input line 35.
-
-
-LaTeX Warning: Citation `chen2025' on page 4 undefined on input line 37.
-
-
-LaTeX Warning: Citation `chen2025' on page 4 undefined on input line 39.
+LaTeX Font Warning: Font shape `U/rsfs/m/n' in size <10.53937> not available
+(Font)              size <10.95> substituted on input line 47.
 
 
 
 [4]
 
-LaTeX Font Warning: Font shape `U/rsfs/m/n' in size <10.53937> not available
-(Font)              size <10.95> substituted on input line 48.
-
-
-LaTeX Warning: Citation `chen2025' on page 5 undefined on input line 49.
-
-
-LaTeX Warning: Citation `chen2025' on page 5 undefined on input line 60.
-
-
-LaTeX Warning: Citation `chen2025' on page 5 undefined on input line 70.
-
-
-LaTeX Warning: Citation `chen2025' on page 5 undefined on input line 75.
-
-
-LaTeX Warning: Citation `chen2025' on page 5 undefined on input line 79.
-
-
-LaTeX Warning: Citation `chen2025' on page 5 undefined on input line 86.
-
-
-LaTeX Warning: Citation `chen2025' on page 5 undefined on input line 91.
-
-
-
 
 LaTeX Font Warning: Font shape `TU/KaiTi(0)/m/sl' undefined
-(Font)              using `TU/KaiTi(0)/m/n' instead on input line 92.
+(Font)              using `TU/KaiTi(0)/m/n' instead on input line 86.
 
 [5]
 
-LaTeX Warning: Citation `chen2025' on page 6 undefined on input line 93.
-
-
-LaTeX Warning: Citation `chen2025' on page 6 undefined on input line 95.
-
-
-LaTeX Warning: Citation `chen2025' on page 6 undefined on input line 98.
-
-
-LaTeX Warning: Citation `chen2025' on page 6 undefined on input line 100.
-
-
-LaTeX Warning: Citation `chen2025' on page 6 undefined on input line 105.
-
-
-LaTeX Warning: Citation `wang2025' on page 6 undefined on input line 111.
-
-
-LaTeX Warning: Citation `wang2025' on page 6 undefined on input line 113.
-
-
-LaTeX Warning: Citation `wang2025' on page 6 undefined on input line 113.
-
-
-LaTeX Warning: Citation `wang2025' on page 6 undefined on input line 117.
-
-Missing character: There is no ≠ (U+2260) in font [lmroman10-regular]:mapping=tex-text;!
-
-LaTeX Warning: Citation `wang2025' on page 6 undefined on input line 119.
-
-
-LaTeX Warning: Citation `wang2025' on page 6 undefined on input line 121.
-
-
-
 [6]
-
-LaTeX Warning: Citation `wang2025' on page 7 undefined on input line 129.
-
-
-LaTeX Warning: Citation `wang2025' on page 7 undefined on input line 132.
-
-
-LaTeX Warning: Citation `wang2025' on page 7 undefined on input line 135.
-
-
-LaTeX Warning: Citation `wang2025' on page 7 undefined on input line 138.
-
-
-LaTeX Warning: Citation `wang2025' on page 7 undefined on input line 146.
-
+Missing character: There is no ≠ (U+2260) in font [lmroman10-regular]:mapping=tex-text;!
 Missing character: There is no 、 (U+3001) in font [lmroman10-regular]:mapping=tex-text;!
-
-LaTeX Warning: Citation `wang2025' on page 7 undefined on input line 152.
-
-
-LaTeX Warning: Citation `wang2025' on page 7 undefined on input line 157.
-
-
-LaTeX Warning: Citation `wang2025' on page 7 undefined on input line 158.
-
-
-LaTeX Warning: Citation `wang2025' on page 7 undefined on input line 162.
-
 
 
 [7]
 
-LaTeX Warning: Citation `wang2025' on page 8 undefined on input line 164.
-
-
-LaTeX Warning: Citation `wang2025' on page 8 undefined on input line 166.
-
-
-LaTeX Warning: Citation `wang2025' on page 8 undefined on input line 171.
-
-
-LaTeX Warning: Citation `wang2025' on page 8 undefined on input line 173.
-
-
-LaTeX Warning: Citation `wang2025' on page 8 undefined on input line 176.
-
-
-LaTeX Warning: Citation `wang2025' on page 8 undefined on input line 199.
-
-
-
 [8]
-
-LaTeX Warning: Citation `chen2025' on page 9 undefined on input line 216.
-
-
-LaTeX Warning: Citation `wang2025' on page 9 undefined on input line 224.
-
-
 
 [9]
 
@@ -1081,28 +961,16 @@ LaTeX Font Warning: Size substitutions with differences
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-
-Package rerunfilecheck Warning: File `main.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `main.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  72D13C86E985E6168822E5FBEAA66A5B;5093.
+Package rerunfilecheck Info: File `main.out' has not changed.
+(rerunfilecheck)             Checksum: 72D13C86E985E6168822E5FBEAA66A5B;5093.
  ) 
 Here is how much of TeX's memory you used:
- 31689 strings out of 473832
- 720146 string characters out of 5733159
- 1127307 words of memory out of 5000000
- 54205 multiletter control sequences out of 15000+600000
+ 31710 strings out of 473832
+ 720416 string characters out of 5733159
+ 1129985 words of memory out of 5000000
+ 54220 multiletter control sequences out of 15000+600000
  575113 words of font info for 128 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 107i,8n,125p,564b,472s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 107i,8n,125p,564b,360s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on main.pdf (10 pages).
