@@ -1,0 +1,54 @@
+% This is the main file for the document. It contains the preamble and the document body.，
+% The preamble contains the document class, the title, the author, and any packages that are needed.
+% 如果需要中文支持,请将 \documentclass{MathNote} 替换为 \documentclass{MathNoteCN}
+
+\documentclass{MathNoteCN}
+
+\title{数学竞赛研讨课第一节}
+\author{黄宇辰}
+
+\begin{document}
+	\maketitle
+	\section{一些常用不等式}
+	\begin{theorem}{均值不等式}{}
+		对于任意的正数 $ a_1, a_2, \ldots, a_n $，都有
+		\[\frac{a_1 + a_2 + \cdots + a_n}{n} \geq \sqrt[n]{a_1 a_2 \cdots a_n}.\]
+	\end{theorem}
+	\begin{proof}
+		(1)向前数学归纳法: \\
+		归纳假设: \\
+		设 $ P(n) $ 为命题“对于任意的正数 $ a_1, a_2, \ldots, a_n $，都有
+		\[\frac{a_1 + a_2 + \cdots + a_n}{n} \geq \sqrt[n]{a_1 a_2 \cdots a_n}.\]
+		\textbf{基例}: \\
+		$ n=1 $ 时，显然成立。\\
+		\textbf{假设}: \\
+		假设 $ P(2^{k}) $ 成立，即对于任意的正数 $ a_1, a_2, \ldots, a_{2^k} $，都有
+		\[\frac{a_1 + a_2 + \cdots + a_{2^k}}{2^k} \geq \sqrt[2^k]{a_1 a_2 \cdots a_{2^k}}.\]
+
+		那么对于 $ n=2^{k+1} $，我们有
+		\[\frac{a_1 + a_2 + \cdots + a_{2^k} + a_{2^k+1}}{2^{k+1}} =\frac{a_1+a_2+\cdots + a_{2^k}+a_{2^k+1}+}{2}\frac{a_1 + a_2 + \cdots + a_{2^k} + a_{2^k+1}}{2^k} \geq \sqrt[2^{k+1}]{a_1 a_2 \cdots a_{2^k} a_{2^k+1}}.\]
+
+		因此，命题 $ P(n) $ 对任意正整数 $ n $ 成立。
+	\end{proof}
+	But this immediately implies the following corollary:
+	\begin{corollary}{Riemann's}{}
+		Every non-trivial zero of the Riemann $ \zeta $ function has real part one-half.
+	\end{corollary}
+	Which we can demonstrate with an example:
+	\begin{example}{Poincare}{}
+		Consider a simply connected, closed 3-manifold. Notice that it is homeomorphic to the 3-sphere!
+	\end{example}
+	\begin{lemma}
+		This is a lemma.
+	\end{lemma}
+	\begin{proposition}
+		This is a proposition.
+	\end{proposition}
+	\begin{note}
+		This is a note.
+	\end{note}
+		\begin{definition}{Limit of a function}{}
+	If, for every $ \epsilon >0 $ there exists some $ \delta >0 $ such $ 0<x-a<\delta $ implies $ |f(x)-L|<\epsilon $ then we say that the function $ f $ has a limit of $ L $ at $ a $ and we write
+	\[\lim_{x\to a}f(x)=L.\]
+	\end{definition}
+\end{document}

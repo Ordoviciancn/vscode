@@ -1,10 +1,10 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.4.3)  27 JUL 2025 21:12
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.4.3)  27 AUG 2025 11:46
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**"v:/vscode/latex/Latex_Template-main/Math Note/main"
-(v:/vscode/latex/Latex_Template-main/Math Note/main.tex
+**v:/vscode/latex/Mathematics/数学竞赛研讨/main
+(v:/vscode/latex/Mathematics/数学竞赛研讨/main.tex
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
 (./MathNoteCN.cls
@@ -928,32 +928,32 @@ LaTeX Font Info:    Trying to load font information for U+rsfs on input line 12.
 File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
 )
 
-LaTeX Font Warning: Font shape `U/rsfs/m/n' in size <18.06749> not available
-(Font)              size <17.28> substituted on input line 12.
-
-
-LaTeX Font Warning: Font shape `U/rsfs/m/n' in size <15.05624> not available
-(Font)              size <14.4> substituted on input line 12.
-
-
 LaTeX Font Warning: Font shape `TU/KaiTi(0)/b/n' undefined
-(Font)              using `TU/KaiTi(0)/m/n' instead on input line 14.
+(Font)              using `TU/KaiTi(0)/m/n' instead on input line 12.
 
 
 LaTeX Font Warning: Font shape `U/rsfs/m/n' in size <10.53937> not available
-(Font)              size <10.95> substituted on input line 14.
+(Font)              size <10.95> substituted on input line 13.
 
 
 LaTeX Font Warning: Font shape `TU/KaiTi(0)/m/it' undefined
-(Font)              using `TU/KaiTi(0)/m/n' instead on input line 25.
+(Font)              using `TU/KaiTi(0)/m/n' instead on input line 18.
 
 
 
-File: Blue archive.png Graphic file (type bmp)
-<Blue archive.png>
+File: trans_logo.png Graphic file (type bmp)
+<trans_logo.png>
 [1
 
-] (./main.aux)
+]
+
+
+LaTeX Font Warning: Font shape `TU/KaiTi(0)/m/sl' undefined
+(Font)              using `TU/KaiTi(0)/m/n' instead on input line 54.
+
+File: trans_logo.png Graphic file (type bmp)
+<trans_logo.png>
+[2] (./main.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2022/07/14>
@@ -961,21 +961,21 @@ L3 programming layer <2022/07/14>
 
 
 LaTeX Font Warning: Size substitutions with differences
-(Font)              up to 0.78749pt have occurred.
+(Font)              up to 0.41063pt have occurred.
 
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 9814C2D956916ADB9290ECA4E25C967A;103.
+(rerunfilecheck)             Checksum: 060A04D428CB0F52B73C1ABA7411BCF5;99.
  ) 
 Here is how much of TeX's memory you used:
- 31764 strings out of 473832
- 705096 string characters out of 5733159
- 1133656 words of memory out of 5000000
- 54267 multiletter control sequences out of 15000+600000
- 580318 words of font info for 141 fonts, out of 8000000 for 9000
+ 31790 strings out of 473832
+ 707317 string characters out of 5733159
+ 1130212 words of memory out of 5000000
+ 54291 multiletter control sequences out of 15000+600000
+ 575073 words of font info for 123 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 107i,10n,125p,585b,1284s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 107i,10n,125p,572b,1280s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (1 page).
+Output written on main.pdf (2 pages).
