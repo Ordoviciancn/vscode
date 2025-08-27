@@ -1,0 +1,203 @@
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.4.14)  27 AUG 2025 08:11
+entering extended mode
+ restricted \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**d:/vscode/latex/pre/report/cover
+(d:/vscode/latex/pre/report/cover.tex
+LaTeX2e <2024-11-01> patch level 2
+L3 programming layer <2025-03-26>
+
+d:/vscode/latex/pre/report/cover.tex:16: LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.16 \covertitle{2025-2026-1 课程设计I-数学模型}
+                                        
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+d:/vscode/latex/pre/report/cover.tex:16: Undefined control sequence.
+\covertitle #1->\begin {center}\Huge 
+                                     \bfseries #1\end {center}
+l.16 \covertitle{2025-2026-1 课程设计I-数学模型}
+                                        
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+Missing character: There is no 课 (U+8BFE) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 程 (U+7A0B) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 设 (U+8BBE) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 计 (U+8BA1) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 数 (U+6570) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 学 (U+5B66) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 模 (U+6A21) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 型 (U+578B) in font [lmroman10-bold]:mapping=tex-text;!
+
+Overfull \hbox (26.83pt too wide) in paragraph at lines 16--16
+ \TU/lmr/bx/n/10 2025- 
+ []
+
+
+Overfull \hbox (26.83pt too wide) in paragraph at lines 16--16
+ \TU/lmr/bx/n/10 2026- 
+ []
+
+
+Overfull \hbox (5.75pt too wide) in paragraph at lines 16--16
+ \TU/lmr/bx/n/10 1 
+ []
+
+
+Overfull \hbox (19.39pt too wide) in paragraph at lines 16--16
+ \TU/lmr/bx/n/10 课程设计I- 
+ []
+
+
+Overfull \hbox (11.2pt too wide) in paragraph at lines 16--16
+ \TU/lmr/bx/n/10 数学模型 
+ []
+
+d:/vscode/latex/pre/report/cover.tex:20: Undefined control sequence.
+\coversubtitle #1->\begin {center}\Large 
+                                         \bfseries #1\end {center}
+l.20 \coversubtitle{第一次大作业报告}
+                             
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+Missing character: There is no 第 (U+7B2C) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 一 (U+4E00) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 次 (U+6B21) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 大 (U+5927) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 作 (U+4F5C) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 业 (U+4E1A) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 报 (U+62A5) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 告 (U+544A) in font [lmroman10-bold]:mapping=tex-text;!
+
+Overfull \hbox (22.4pt too wide) in paragraph at lines 20--20
+ \TU/lmr/bx/n/10 第一次大作业报告 
+ []
+
+d:/vscode/latex/pre/report/cover.tex:24: Undefined control sequence.
+\covertitle #1->\begin {center}\Huge 
+                                     \bfseries #1\end {center}
+l.24 \covertitle{基于不同模型的卫生资源预测与配置}
+                                  
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+Missing character: There is no 基 (U+57FA) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 于 (U+4E8E) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 不 (U+4E0D) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 同 (U+540C) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 模 (U+6A21) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 型 (U+578B) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 的 (U+7684) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 卫 (U+536B) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 生 (U+751F) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 资 (U+8D44) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 源 (U+6E90) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 预 (U+9884) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 测 (U+6D4B) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 与 (U+4E0E) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 配 (U+914D) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 置 (U+7F6E) in font [lmroman10-bold]:mapping=tex-text;!
+
+Overfull \hbox (44.8pt too wide) in paragraph at lines 24--24
+ \TU/lmr/bx/n/10 基于不同模型的卫生资源预测与配置 
+ []
+
+d:/vscode/latex/pre/report/cover.tex:29: Undefined control sequence.
+l.29 \large
+           \bfseries
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+Missing character: There is no 班 (U+73ED) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 级 (U+7EA7) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no ： (U+FF1A) in font [lmroman10-bold]:mapping=tex-text;!
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 30.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 30.
+
+Overfull \hbox (31.4pt too wide) in paragraph at lines 30--30
+\TU/lmr/bx/n/10 班级：$[]$  
+ []
+
+Missing character: There is no 姓 (U+59D3) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 名 (U+540D) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no ： (U+FF1A) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 黄 (U+9EC4) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 宇 (U+5B87) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 辰 (U+8FB0) in font [lmroman10-bold]:mapping=tex-text;!
+
+Overfull \hbox (16.79999pt too wide) in paragraph at lines 31--31
+[]\TU/lmr/bx/n/10 姓名：$[]$  
+ []
+
+Missing character: There is no 学 (U+5B66) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no 号 (U+53F7) in font [lmroman10-bold]:mapping=tex-text;!
+Missing character: There is no ： (U+FF1A) in font [lmroman10-bold]:mapping=tex-text;!
+
+Overfull \hbox (65.9pt too wide) in paragraph at lines 32--32
+[]\TU/lmr/bx/n/10 学号：$[]$  
+ []
+
+d:/vscode/latex/pre/report/cover.tex:37: Undefined control sequence.
+\coverinfo #1->\begin {center}\large 
+                                     #1\end {center}
+l.37 \coverinfo{提交日期：2025年8月27日}
+                                 % 可选
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+Missing character: There is no 提 ("63D0) in font nullfont!
+Missing character: There is no 交 ("4EA4) in font nullfont!
+Missing character: There is no 日 ("65E5) in font nullfont!
+Missing character: There is no 期 ("671F) in font nullfont!
+Missing character: There is no ： ("FF1A) in font nullfont!
+Missing character: There is no 2 ("32) in font nullfont!
+Missing character: There is no 0 ("30) in font nullfont!
+Missing character: There is no 2 ("32) in font nullfont!
+Missing character: There is no 5 ("35) in font nullfont!
+Missing character: There is no 年 ("5E74) in font nullfont!
+Missing character: There is no 8 ("38) in font nullfont!
+Missing character: There is no 月 ("6708) in font nullfont!
+Missing character: There is no 2 ("32) in font nullfont!
+Missing character: There is no 7 ("37) in font nullfont!
+Missing character: There is no 日 ("65E5) in font nullfont!
+)
+! Emergency stop.
+<*> d:/vscode/latex/pre/report/cover
+                                    
+*** (job aborted, no legal \end found)
+
+ 
+Here is how much of TeX's memory you used:
+ 27 strings out of 470267
+ 593 string characters out of 5488342
+ 416773 words of memory out of 5000000
+ 26755 multiletter control sequences out of 15000+600000
+ 626833 words of font info for 41 fonts, out of 8000000 for 9000
+ 1348 hyphenation exceptions out of 8191
+ 20i,3n,21p,125b,138s stack positions out of 10000i,1000n,20000p,200000b,200000s
+No pages of output.
