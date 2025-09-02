@@ -1,13 +1,14 @@
 \documentclass{beamer}
-\usepackage[bit,en]{collegeBeamer}
+\usepackage{xeCJK}
+\usepackage[bit,zh]{collegeBeamer}
 
 \definecolor{hrefcol}{RGB}{0, 0, 255} % Example: blue color
 
 % meta-data
-\title{Will AI Beat us in the Job Market?\\Absolutely No Way!}
-\subtitle{A Persuasive Speech}
-\author{\href{mailto:trunzer@ruc.edu.cn}{Run-ze Tian (Max)}}
-\date{Created 1st December 2024}
+\title{基于拉格朗日松弛与分支定价算法的分布式单元生产系统中的资源分配问题}
+\subtitle{论文报告}
+\author{{黄宇辰, 彭子瀚}}
+\date{2025.9.2}
 
 % document body
 \begin{document}
@@ -16,135 +17,268 @@
 
     \begin{frame}
         \begin{abstract}
-            \qquad Many people worry that AI will beat us in the job market, but \textbf{\textcolor{structure}{ from 
-                        the perspective of history, the current limitations of AI, and the
-                        potential for future job growth}}, AI will not dominate the job market
-                        but instead \textbf{\textcolor{structure}{\large reshape}} it, creating opportunities for human creativity
-                        and growth.
+            \qquad SPS是一种起源于日本的电子装配企业的生产模式, 内部包含多个\textbf{生产单元}, 每个单元内部有一名或多名工人, 每个单元的工人可以灵活重组, 根据不同的生产任务和产品需求, 可以调整单元内的\textbf{工人配置}, 提高生产效率.
+            
+            \qquad 在工业5.0推动制造模式向柔性化、人性化转型的趋势下, \textbf{分部式单元生产系统}(SPS)作为传统装配线向全柔性单元系统过渡的关键形态, 其资源分配优化成为制造业的重要课题. 
         \end{abstract}
     \end{frame}
 
-    \section{Historical Perspective}
+    \section{论文选取}
 
-    \begin{frame}{Employment Rate Remained STABLE}{\thesection \, \secname}
-        \includegraphics[width=0.8\textwidth]{失业率.png}
+    \begin{frame}{选取过程}{\thesection \, \secname}
+        \qquad 首先依托中国知网(CNKI)与Web of Science(WoS)两大权威学术数据库开展检索. 以\textbf{卫生资源预测}、\textbf{卫生资源配置}、\textbf{数学模型}、\textbf{2025年} 为核心检索词, 精准锁定论文的研究范围. 
 
-        \renewcommand{\footnoterule}
-        \footnotetext{\textcolor{gray}{\tiny Source: Bank of England\qquad Note: The overall employment rate remained stable during the Industrial Revolutions.}}
+        \qquad 经标题、摘要精读, 剔除以下内容: 模型应用与卫生资源无关(如工业资源配置、农业资源模型); 仅提及资源分配概念以及数学模型理论, 无具体构建与求解过程; 重复发表或内容不完整的论文. 
+
+        \qquad 最终筛选出 \textbf{2篇核心论文}, 覆盖不同数学模型类型, 满足作业对比分析需求. 
     \end{frame}
 
-    \begin{frame}{Living Standards Raised}{\thesection \, \secname}
+    \begin{frame}{选取结果}{\thesection \, \secname}
        \begin{columns}
-            \begin{column}{0.3\textwidth}
-                \begin{itemize}
-                    \item Increase productivity
-                    \item Increase Real wage
-                \end{itemize}
+            \begin{column}{0.45\textwidth}
+               \qquad 最终选择了两篇核心论文:
+               \begin{itemize}
+                   \item \textbf{基于灰色－回归组合模型的淄博市卫生资源预测}
+                   \item \textbf{基于DEA-Malmquist分析的广东省城市公立医院资源配置效率研究}
+               \end{itemize}
             \end{column}
-            \begin{column}{0.7\textwidth}
-                \includegraphics[width=\textwidth]{收入提高.png}\newline
-                \renewcommand{\footnoterule}
-            \footnotetext{\textcolor{gray}{\tiny Source: Bank of England.  Note:  series are ten year moving averages.}}
-            \end{column}
-        \end{columns}
-    \end{frame}
-
-    \section{Current Limitations}
-
-    \begin{frame}[fragile]{Shortage of Emotional Intelligence and Stability} 
-        \begin{center}
-            \textbf{\Large AI may excel in certain areas, 
-            but its current limitations ensure that it serves
-             as a tool to \textcolor{structure}{assist humans, not replace them.}}
-        \end{center}
-        \begin{columns}
-        \begin{column}{0.5\textwidth}
-            \begin{enumerate}
-                \item[-] \textbf{\textcolor{structure}{\large Lack of EI:}}\newline
-                \begin{enumerate}
-                    \item[A)] AI cannot truly empathize or be emotionally anticipatory
-                    \item[B)] AI cannot make decisions considering human emotions
-                \end{enumerate} 
-            \end{enumerate}
-        \end{column}
-        \begin{column}{0.5\textwidth}
-        \begin{enumerate}
-            \item[-] \textbf{\textcolor{structure}{\large Not Always Right}}\newline 
-            \begin{enumerate}
-                \item[A)] CNET had to issue several corrections after using AI 
-                \item[B)] IAMAW  workload increased
-                for implementing new AI tools
-            \end{enumerate}
-        \end{enumerate}
-        \end{column}
-        \end{columns}
-    \end{frame}
-    \section{Future Job Growth}
-
-    \begin{frame}
-        \frametitle{Future Job Growth}
-        \begin{columns}
-            \begin{column}{0.5\textwidth}
-                \includegraphics[width=0.85\textwidth]{ai_impact_on_jobs_pie.png}
-                
-                More companies expect jobs growth.
-            \end{column}
-            \begin{column}{0.5\textwidth}
-                \includegraphics[width=0.85\textwidth]{ai_linked_roles_growth.png}
-                AI-linked roles are expected to swell
+            \begin{column}{0.55\textwidth}
+                \includegraphics[width=0.8\textwidth]{essay1.png}
+                \includegraphics[width=0.8\textwidth]{essay2.png}
             \end{column}
         \end{columns}
     \end{frame}
 
-    \section{The End}
+    \section{论文一研究}
 
-    \begin{frame}
-        \frametitle{Conclusion}
-            \begin{quote}
-                \textbf{ AI will not replace us but \textcolor{structure}{\large reshape how
-                        we work}. It is a catalyst for progress, pushing us toward more creative,
-                        meaningful, and higher-value work.}        
-                        \newline
-                        \begin{center}
-                        \textbf{\textcolor{structure}{\Large Let us embrace its potential to enhance our lives and career!}}
-                \end{center}
-            \end{quote}   
+    \begin{frame}{背景分析} 
+        \qquad \textbf{新医改推动与政策导向}: 2009 年新医改以来, 我国医疗资源总量不断增加, 2009-2023 年, 全国卫生技术人员数、医疗床位数和政府卫生支出等分别增长 131.4\%、130.4\% 和 571.9\%. 但城乡之间的医疗资源差距仍然明显, 党的二十届三中全会强调 ''促进优质医疗资源扩容下沉和区域均衡布局'', 为医疗资源配置指明了方向. 
+
+        \qquad\textbf{人口结构与需求变化}：随着人口老龄化和慢性病患病率的上升, 医疗需求快速增长, 但医疗资源供给增长相对滞后, 导致供需矛盾日益突出. 
+
+        \qquad 因此当前急需对医疗资源进行合理预测与配置, 以满足不断增长的医疗需求. 
     \end{frame}
-
-    \begin{frame}
-        \frametitle{References}
-        \begin{thebibliography}{}
-
-            \bibitem{技术革命与就业率}
-            Mark, C. Bank of England.(2018, September 14). "The Future of Work".
-            Retrieved from \url{https://www.bankofengland.co.uk/-/media/boe/files/speech/2018/the-future-of-work-speech-by-mark-carney-slides.pdf}
-            
-            \bibitem{AI同理心}
-            Bethany, C.\& Jessica, C. (2023, September 5). Opinion: Here are the jobs AI will impact most. 
-            Retrieved from \url{https://www.cnn.com/2023/09/05/opinions/artificial-intelligence-jobs-labor-market/index.html}
-            
-            \bibitem{AI不一定更好}
-            Catherine, T.(2023, July 22). ‘It almost doubled our workload’: A
-            I is supposed to make jobs easier. These workers disagree. 
-            Retrieved from \url{https://www.cnn.com/2023/07/22/tech/ai-jobs-efficiency-productivity/index.html}
-            
-            \bibitem{AI不一定更好} 
-            Catherine, T.(2023, January 26). Plagued with errors: 
-            A news outlet’s decision to write stories with AI backfires. 
-            Retrieved from \url{https://www.cnn.com/2023/01/25/tech/cnet-ai-tool-news-stories/index.html}
-            \end{thebibliography}
+    \begin{frame}{论文一:基于灰色－回归组合模型的淄博市卫生资源预测}
+        \qquad 灰色模型是灰色系统理论的核心工具, 用于处理''部分信息已知、部分信息未知''的贫信息系统 (如小样本、弱规律数据).\\
+        \qquad 其核心思想是：通过数据生成技术(如累加、累减)将原始序列的\textbf{随机性}转化为\textbf{规律性}, 再用微分方程拟合演化趋势, 实现预测或系统分析. \\
+        \qquad 最基础的灰色模型是GM (1,1) 模型 (1 阶单变量灰色模型), 适用于单变量、近似指数增长或衰减的序列, 样本量通常只需 4~10 个 (远少于传统统计模型的样本要求). 
     \end{frame}
-    \begin{frame}
-        \frametitle{References}
-    \begin{thebibliography}{}   
-        \bibitem{AI新增就业}
-        Ian, S. \& Kate, W.(2023, May). These are the jobs most likely to be lost – and created – because of AI \url{https://www.weforum.org/stories/2023/05/jobs-lost-created-ai-gpt/}
+    \begin{frame}{模型一介绍}
+        \qquad 首先要定义\textbf{原始序列}和\textbf{数据生成}
+        设研究对象的原始观测序列为:
+        \[x^{(0)}=\{x^{(0)}(1),x^{(0)}(2),...,x^{(0)}(n)\},\, x^{(0)}(k)>0 \,(\forall k=1,2,...,n)\]
         
-        \end{thebibliography}
+        \textbf{为什么要''数据生成''}:\\
+        \qquad 原始序列$x^{(0)}$通常具有较强的随机性和不确定性，直接对其进行建模可能会导致较大的误差。通过累加生成，可以将原始序列转化为更具规律性的序列，从而提高模型的预测精度。
+        
+        \qquad 对$x^{(0)}$做累加,得到生成序列: $$x^{(1)}(k)=\sum_{j=1}^{k}x^{(0)}(j),\, (k=1,2,...,n)$$
+        
+        \qquad 最后得到的$x^{(1)}$是非递减序列并且变化趋势更为稳定.
     \end{frame}
-            
-    %\bibliographpage
+    \begin{frame}{背景值构建}
+        \qquad 首先构建背景值
+        近似生成序列$x^{(1)}$在区间$[k-1, k]$上的''平均状态'', 为后续建立微分方程提供中间变量. 
+        设权重系数$\alpha \in [0,1]$，背景值$z^{(1)}(k)$: 
+        \[
+        z^{(1)}(k) = \alpha \cdot x^{(1)}(k) + (1-\alpha) \cdot x^{(1)}(k-1)
+        \]
+        \begin{block}{经典GM(1,1)取$\alpha=0.5$}
+            \[
+            z^{(1)}(k) = 0.5 \cdot x^{(1)}(k) + 0.5 \cdot x^{(1)}(k-1) \quad (k=2,3,\dots,n)
+            \]
+        \end{block}
+    \end{frame}
+    \begin{frame}{建立灰色模型}
+    \textbf{核心假设}\\
+        原始序列的增量$x^{(0)}(k)$（即$x^{(1)}(k)-x^{(1)}(k-1)$）与背景值$z^{(1)}(k)$满足线性关系：
+        \[
+        x^{(0)}(k) + a \cdot z^{(1)}(k) = b \tag{1}
+        \]
+        其中：
+        \begin{itemize}
+            \item $a$: \textbf{发展系数}（反映序列增长速度：$a<0$递增，$a>0$递减）；
+            \item $b$: \textbf{灰作用量}（反映系统内在驱动能力，与初始条件相关）。
+        \end{itemize}
+    \textbf{方程的离散性说明}\\
+        式(1)是\textit{离散线性方程}，对$k=2,3,\dots,n$共$n-1$个方程
+        \[
+        \begin{cases}
+        x^{(0)}(2) + a z^{(1)}(2) = b, \\
+        x^{(0)}(3) + a z^{(1)}(3) = b, \\
+        \vdots \\
+        x^{(0)}(n) + a z^{(1)}(n) = b.
+        \end{cases}
+        \]
+    \end{frame}
+    \begin{frame}{最小二乘估计参数$a,b$}
+    \textbf{方程矩阵化} \,将方程组改写为矩阵形式$Y = B\beta + \varepsilon$: 
+        \[
+        Y = \begin{bmatrix} x^{(0)}(2) \\ x^{(0)}(3) \\ \vdots \\ x^{(0)}(n) \end{bmatrix}, \quad 
+        B = \begin{bmatrix} -z^{(1)}(2) & 1 \\ -z^{(1)}(3) & 1 \\ \vdots & \vdots \\ -z^{(1)}(n) & 1 \end{bmatrix}, \quad 
+        \beta = \begin{bmatrix} a \\ b \end{bmatrix}, \quad 
+        \varepsilon = \begin{bmatrix} \varepsilon_2 \\ \varepsilon_3 \\ \vdots \\ \varepsilon_n \end{bmatrix}
+        \]
+\textbf{最小二乘法} \,目标：最小化残差平方和$S(\beta) = \varepsilon^T \varepsilon = (Y - B\beta)^T(Y - B\beta)$。\\
+        对$\beta$求导并令导数为0, 得\textbf{正规方程}: 
+        \[
+        B^T B \beta = B^T Y
+        \]
+        当$B^T B$可逆（$n \geq 4$时成立），参数估计为：
+        \[
+        \hat{\beta} = \begin{bmatrix} \hat{a} \\ \hat{b} \end{bmatrix} = (B^T B)^{-1} B^T Y \tag{2}
+        \]
+\end{frame}
+\begin{frame}{求解白化方程(连续化模型)}
+    \textbf{建立白化方程}
+        将离散方程(1)连续化：
+        $x^{(0)}(k) \approx \frac{dx^{(1)}(t)}{dt}$; 
+        $z^{(1)}(k) \approx x^{(1)}(t)$\\
+        得到\textbf{一阶线性非齐次微分方程}（白化方程）：
+        \[
+        \frac{dx^{(1)}(t)}{dt} + a x^{(1)}(t) = b \tag{3}
+        \]
+        初始条件：$x^{(1)}(1) = x^{(0)}(1)$ (因$x^{(1)}(1) = x^{(0)}(1)$). \\
+    \textbf{求解微分方程}
+        1. 齐次解：$\frac{dx^{(1)}}{dt} + a x^{(1)} = 0 \implies x_h^{(1)}(t) = C e^{-a t}$; \\
+        2. 特解：设$x_p^{(1)}(t) = \frac{b}{a}$ (代入验证满足方程)\\
+        3. 通解：$x^{(1)}(t) = C e^{-a t} + \frac{b}{a}$\\
+        4. 代入初始条件得$C = \left(x^{(0)}(1) - \frac{b}{a}\right)e^a$, 最终: 
+        \[
+        x^{(1)}(t) = \left(x^{(0)}(1) - \frac{b}{a}\right)e^{-a(t-1)} + \frac{b}{a} \tag{4}
+        \]
+        式(4)为GM(1,1)的\textbf{时间响应函数}。
+\end{frame}
+\begin{frame}{预测公式与还原 (1-IAGO)}
+    \textbf{生成序列的预测}\\
+        将时间响应函数(4)离散化（$t = k+1$），代入参数估计$\hat{a},\hat{b}$：
+        \[
+        \hat{x}^{(1)}(k+1) = \left(x^{(0)}(1) - \frac{\hat{b}}{\hat{a}}\right)e^{-\hat{a} k} + \frac{\hat{b}}{\hat{a}} \quad (k=1,2,\dots,n) \tag{5}
+        \]
+        其中$\hat{x}^{(1)}(k+1)$为生成序列$x^{(1)}$的$k+1$步预测值。\\
+    \textbf{原始序列的还原}\\
+        利用“累加生成的逆运算——累减生成”还原原始序列：
+        \[
+        \hat{x}^{(0)}(k+1) = \hat{x}^{(1)}(k+1) - \hat{x}^{(1)}(k) \tag{6}
+        \]
+        代入式(5)化简得原始序列预测公式：
+        \[
+        \hat{x}^{(0)}(k+1) = \left(x^{(0)}(1) - \frac{\hat{b}}{\hat{a}}\right)e^{-\hat{a} k} (1 - e^{\hat{a}})
+        \]
+ \end{frame}
+ \begin{frame}{模型总结}
+  \begin{columns}[T]
+    \column{0.45\textwidth}
+    \textbf{核心优点}
+      \begin{itemize}
+        \item[1.] 数据要求低: 仅需4\~ 10个非负样本, 适配贫信息场景; 
+        \item[2.] 计算简单: 无复杂迭代, Matlab即可实现; 
+        \item[3.] 可解释性强: 参数$a$（发展系数）、$b$（灰作用量）物理意义明确; 
+        \item[4.] 短期预测准: 1\~5步预测相对残差<10\%，抗随机干扰能力强; 
+        \item[5.] 单变量建模: 无需外部变量, 适用范围广. 
+      \end{itemize}
+    \column{0.45\textwidth}
+      \begin{itemize}
+        \item[1.] 趋势局限: 仅适用于近似指数增长/衰减序列, 对波动数据拟合差; 
+        \item[2.] 长期精度差: 预测步数>5时, 误差随时间累积;
+        \item[3.] 无法量化关联: 单变量模型, 忽略外部因素（如政策、人口结构）影响;
+        \item[4.] 对异常值敏感: 原始序列中极端值会显著干扰生成序列规律性;
+        \item[5.] 光滑性依赖: 需满足$\gamma(k)<0.5$, 否则建模基础不成立.
+      \end{itemize}
+  \end{columns}
+  \vspace{0.5cm}
+  \centering
+  \textcolor{black}{\textbf{适用场景：小样本、短期、趋势明确的预测（如卫生资源短期规划）}}
+\end{frame}
 
-    \QApage
+    \section{论文二研究}
+\begin{frame}{DEA-BCC模型}
+  \begin{itemize}
+    \item \textbf{模型假设}: 决策单元存在规模报酬变动, 综合效率可分解为纯技术效率 (PTE)与规模效率 (SE).
+    \item \textbf{线性规划模型}: \\
+      对第$j_0$个DMU，最小化投入效率值$\theta$: 
+      \[
+      \begin{cases} 
+      \min \theta - \varepsilon \left( \sum_{i=1}^m s_i^- + \sum_{r=1}^s s_r^+ \right) \\
+      \sum_{j=1}^n \lambda_j x_{ij} + s_i^- = \theta x_{ij_0} \quad (i=1,2,\dots,m) \\
+      \sum_{j=1}^n \lambda_j y_{rj} - s_r^+ = y_{rj_0} \quad (r=1,2,\dots,s) \\
+      \sum_{j=1}^n \lambda_j = 1 \\
+      \lambda_j \geq 0, \ s_i^- \geq 0, \ s_r^+ \geq 0 
+      \end{cases}
+      \]
+      其中：$\theta$为综合效率值（$0 \leq \theta \leq 1$），$x_{ij}$为投入，$y_{rj}$为产出，$\lambda_j$为权重，$s_i^-$（投入冗余）、$s_r^+$（产出不足）为松弛变量。
+    \end{itemize}
+    \end{frame}
+
+\begin{frame}{DEA-BCC模型总结}
+\textbf{效率分解公式}: 
+      \[
+      OE = PTE \times SE
+      \]
+      纯技术效率 (PTE): 规模报酬变动下, 管理与技术水平的效率; \\
+      规模效率 (SE): 资源规模与最优生产规模的适配程度. 
+\end{frame}
+
+
+\begin{frame}{Malmquist指数模型}
+  \begin{itemize}
+    \item \textbf{指数定义}：基于距离函数，衡量时期$t$到$t+1$的全要素生产率 (TFP)变化: 
+      \[
+      Malmquist(t,t+1) = \sqrt{\frac{D^t(x^{t+1},y^{t+1})}{D^t(x^t,y^t)} \times \frac{D^{t+1}(x^{t+1},y^{t+1})}{D^{t+1}(x^t,y^t)}}
+      \]
+      其中$D^t(x^{t+1},y^{t+1})$表示以$t$期前沿面为基准，$t+1$期DMU的距离函数. 
+    \item \textbf{全要素生产率分解}: 
+      \[
+      TFP = TEC \times TC
+      \]
+    \textbf{技术效率变化 (TEC)}: $TEC = \frac{D^{t+1}(x^{t+1},y^{t+1})}{D^t(x^t,y^t)}$，进一步分解为：
+        \[
+        TEC = PTEC \times SEC
+        \]
+    \textbf{技术进步 (TC)}: 
+    \[
+    TC = \sqrt{\frac{D^t(x^{t+1},y^{t+1})}{D^{t+1}(x^{t+1},y^{t+1})} \times \frac{D^t(x^t,y^t)}{D^{t+1}(x^t,y^t)}}
+    \]
+  \end{itemize}
+  \end{frame}
+
+\begin{frame}
+\textbf{指数解读}: \\
+      $TFP > 1$: 全要素生产率提升; $TFP < 1$: 全要素生产率下降; \\
+      $TC > 1$: 技术进步; $TEC > 1$: 效率改善. 
+\end{frame}
+
+\begin{frame}{模型总结}
+    \begin{columns}[T]
+    \column{0.45\textwidth}
+    \textbf{优势}: 
+    \begin{itemize}
+      \item 基于面板数据, 动态追踪全要素生产率 (TFP)跨期变化; 
+      \item 分解$TFP=TEC \times TC$，明确效率变化的核心驱动因素; 
+      \item 衔接DEA-BCC模型, 无需额外数据, 支持跨期/跨区域对比. 
+    \end{itemize}
+    \column{0.45\textwidth}
+    \textbf{局限}: 
+    \begin{itemize}
+      \item 依赖DEA前沿面结果, BCC模型的误差会传递至指数;
+      \item 需完整面板数据, 缺失年份会断裂分析连续性;
+      \item 对短期波动敏感, 难以分离外部因素的具体影响.
+    \end{itemize}
+  \end{columns}
+  \vspace{0.5cm}
+  \centering
+  \textbf{模型选择: 静态诊断用BCC, 动态归因用Malmquist, 联合使用互补不足}
+\end{frame}
+
+\section{总结与改进}
+
+\begin{frame}{改进模型设想与依据}
+\textbf{改进方向1: 灰色-回归-ARIMA组合模型}\\
+\qquad 在文献1的灰色-回归组合模型中，加入\textbf{ARIMA模型} (自回归积分移动平均模型): ARIMA擅长处理波动性数据 (如公共卫生事件导致的资源短期波动), 将GM(1,1)、多元回归、ARIMA的预测值按''熵权法''分配权重, 生成最终预测结果. 
+\textbf{改进方向2: 三阶段DEA-Malmquist模型}\\
+\qquad 在文献2的DEA-Malmquist基础上, 加入\textbf{环境变量调整阶段}: 将“老龄化率”“城镇化率”“人均GDP”作为环境变量, 通过SFA(随机前沿分析)剔除环境因素对原始效率的干扰, 再测算“纯净”的技术效率和规模效率, 最后结合Malmquist分析动态变化. 
+
+\end{frame}
+
+\QApage
 
 \end{document}

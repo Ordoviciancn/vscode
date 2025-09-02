@@ -1,12 +1,11 @@
-\documentclass{cumcmthesis}
-% \documentclass[withoutpreface,bwprint]{cumcmthesis} %去掉封面与编号页，电子版提交的时候使用。
+\documentclass[withoutpreface,bwprint]{cumcmthesis} %去掉封面与编号页，电子版提交的时候使用。
 
 
 \usepackage[framemethod=TikZ]{mdframed}
 \usepackage{url}   % 网页链接
 \usepackage{subcaption} % 子标题
-\title{全国大学生数学建模竞赛编写的 \LaTeX{} 模板}
-\tihao{A}
+\title{基于拉格朗日松弛与分支定价算法的分布式单元生产系统中的资源分配问题}
+\tihao{}
 \baominghao{}
 \schoolname{北京理工大学}
 \membera{黄宇辰}
@@ -14,55 +13,45 @@
 \memberc{ }
 \supervisor{ }%辅导老师
 \yearinput{2025}
-\monthinput{8}
-\dayinput{29}
+\monthinput{9}
+\dayinput{1}
 
 \begin{document}
 
  \maketitle
  \begin{abstract}
-cumcmthesis 是为全国大学生数学建模竞赛编写的\LaTeX{}模板, 旨在让大家专注于 论文的内容写作, 而不用花费过多精力在格式的定制和调整上. 本手册是相应的参考, 其 中提供了一些环境和命令可以让模板的使用更为方便. 同时需要注意, 使用者需要有一 定的 \LaTeX{} 的使用经验, 至少要会使用常用宏包的一些功能, 比如参考文献，数学公式，图片使用，列表环境等等. 例子文件参看 \texttt{example.tex}.
 
-\begin{mdframed} [%
-	roundcorner=5pt,
-	linecolor=gray!50,
-	outerlinewidth=0.5pt,
-	middlelinewidth=0.3pt, backgroundcolor=gray!2,
-innertopmargin=\topskip, frametitle={2023 年建模比赛格式变化说明},
-frametitlefont= \bfseries,frametitlerule=true,frametitlealignment =\raggedright\noindent,
-frametitlerulewidth=.5pt, frametitlebackgroundcolor=gray!2,]
-今年的格式变化主要就是一个地方，如下：
-\begin{enumerate}
-\item 论文第一页为承诺书，\textbf{\color{red}内容进行了调整}。
-
- 
-
-\end{enumerate}
-
-\end{mdframed}
-
-
-\url{https://www.latexstudio.net} 陆续推出了更优质的资源，欢迎学习 。
-
-欢迎大家到QQ群里沟通交流：91940767/478023327/640633524。我们也开通了问答区交流 \LaTeX{}技术：\url{https://ask.latexstudio.net}，欢迎大家前来交流，有问题就来这里，与大神零距离。
-
-\uwave{关注我们的微信公众号}：
-
-\centerline{\includegraphics[width=6cm]{gongzhonghao2}}
 
 \keywords{\TeX{}\quad  图片\quad   表格\quad  公式}
 \end{abstract}
 
-%目录  2019 明确不要目录，我觉得这个规定太好了
-%\tableofcontents
 
-%\newpage
+\section{引言}
+本文以欧洲运筹学杂志 (EJOR)2025年刊发的论文\textbf{"Lagrangian relaxation and branch-and-price algorithm for resource assignment problem in divisional seru systems"} (拉格朗日松弛与分支定价算法在分部式单元生产系统资源分配问题中的应用)为核心研究对象, 围绕该论文聚焦的"\textbf{分部式单元生产系统资源分配}"核心问题展开深度探究. 研究过程中, 一方面系统梳理论文提出的问题建模逻辑与算法设计框架, 完整还原其从\textbf{问题解构}、\textbf{模型构建} (混合整数非线性规划与线性规划转化)到两阶段求解 (\textbf{拉格朗日松弛}筛选作业-单元分配方案、\textbf{分支定价算法}精确求解剩余子问题)的全流程研究思路; 另一方面, 结合该领域优化算法的应用特性与实际生产场景需求, 从求解效率提升、边界计算精度优化、加速策略适配性等维度, 探讨对原方法思路的改进方向, 旨在为分部式单元生产系统资源分配问题的高效解决提供更具实践适配性的优化路径. 
+\section{问题背景分析}
 
-\section{问题重述}
-本次大作业
-\section{问题分析}
+在工业5.0推动制造模式向柔性化、人性化转型的趋势下, 分部式单元生产系统(SPS)作为传统装配线向全柔性单元系统过渡的关键形态, 其资源分配优化成为制造业的重要课题, SPS是一种起源于日本的电子装配企业的生产模式, 内部包含多个生产单元, 每个单元内部有一名或多名工人, 每个单元的工人可以灵活重组, 根据不同的生产任务和产品需求, 可以调整单元内的工人配置, 提高生产效率.具体背景可从三方面展开：
+
+\subsection{制造模式转型的现实需求}
+
+工业5.0强调''人-效率-可持续性''协同\cite{Destouet2023}, 传统大规模生产、精益生产等模式, 面对短产品生命周期、多品种小批量订单时, 因布局固化、工人技能单一难以快速响应\cite{Zhang2022a, Zhang2024b}. 而分部式单元系统以''部分交叉技能工人+可重构设备''为核心，既能减少工序浪费, 又能降低培训成本, 是平衡柔性与成本的关键选择\cite{Yin2018}. 但该系统高效运行依赖''作业-单元-工人-工序''精准匹配, 资源分配不当会导致成本激增, 因此优化需求迫切\cite{Chen2025}. 
+
+\subsection{系统自身的复杂性约束}
+
+一方面, 资源分配需同步解决作业-单元、工人-单元、工序-工人三大决策, 三者相互绑定——作业分配决定单元工序类型, 工人分配决定技能供给, 任一环节偏差都会影响整体成本\cite{Chen2025}; 另一方面, 成本目标需兼顾培训成本 (工人学新技能的费用)与加工成本 (工人技能水平系数$\beta_{ws}$直接影响效率), 两类成本存在权衡, 增加了优化难度\cite{Chen2025}. 
+
+\subsection{现有研究的明显短板}
+
+现有研究多聚焦旋转单元、台体单元等全柔性场景, 假设工人具备全交叉技能\cite{Yu2017, Wang2023}, 但实际中多数企业依赖仅含部分交叉技能工人的分部式单元, 研究贴合度不足\cite{Li2023b}; 求解方法上, 启发式算法\cite{Liu2013, Ying2017}难保证最优性, 精确算法\cite{Zhang2022b}效率低; 部分研究还简化作业为"单一工序", 无法反映实际多工序与技能的关联\cite{Wang2024}。
+
+综上, 在模式转型、系统复杂、研究不足的背景下, EJOR 2025年Chen等\cite{Chen2025}的论文《Lagrangian relaxation and branch-and-price algorithm for resource assignment problem in divisional seru systems》聚焦此问题, 提出拉格朗日松弛-分支定价两阶段算法, 为高效求解提供新路径. 
 
 \section{模型假设与符号说明}
+在部门SPS中, 有$J$个工作需要分配给$I$个部门小组, 并有$W$名工人负责处理这些工作. 每个小组配备$K$台机器, 每台机器都设计用于处理需要特定技能的操作。每个工作都遵循预定义的处理路线，每个操作都需要工人使用配备了特定技能的相应机器来执行。每个工作和工人都必须分配到一个小组，以便完成所有工作的操作。为了确保各个小组之间工作量的均衡分配，需要均匀分配每个小组内的工作数量。此外，工作的每个操作都有固定的处理时间，并且只能由其指定小组中的一名工人执行。每个工人都必须至少掌握一种技能才能承担分配的操作，而技能掌握会产生培训成本。工人表现出异质性，并且对不同技能具有不同的偏好，这导致基于技能熟练度的每个操作的实际处理时间不同。针对工人技能习得的培训是根据他们分配的操作量身定制的，而小组之间的工人转移不予考虑。总体目标是设计出使生产成本（包括培训和处理）最小化的分配方案，并解决操作-工人分配（确定是否培训某种技能）以及工人-小组分配和工作-小组分配的确定问题。
+
+
+
+
 
 \section{模型的建立与求解}
 
@@ -71,13 +60,67 @@ frametitlerulewidth=.5pt, frametitlebackgroundcolor=gray!2,]
 
 %参考文献
 \begin{thebibliography}{9}%宽度9
-    \bibitem[1]{liuhaiyang2013latex}
-    刘海洋.
-    \newblock \LaTeX {}入门\allowbreak[J].
-    \newblock 电子工业出版社, 北京, 2013.
-    \bibitem[2]{mathematical-modeling}
-    全国大学生数学建模竞赛论文格式规范 (2023 年 修改).
-    \bibitem{3} \url{https://www.latexstudio.net}
+   
+\bibitem{Destouet2023}
+Destouet, J. M., et al. (2023). 
+\newblock Industry 5.0: A systematic literature review and research agenda.
+\newblock {\em International Journal of Production Research}.
+
+\bibitem{Zhang2022a}
+Zhang, Y., et al. (2022a). 
+\newblock Scheduling in seru production systems with sequence-dependent setup times.
+\newblock {\em Omega}.
+
+\bibitem{Zhang2024b}
+Zhang, Y., et al. (2024b). 
+\newblock Integrated production and distribution scheduling in seru systems with learning effects.
+\newblock {\em European Journal of Operational Research}.
+
+\bibitem{Yin2018}
+Yin, Y., et al. (2018). 
+\newblock Seru production system: A literature review and future research agenda.
+\newblock {\em International Journal of Production Economics}.
+
+\bibitem{Chen2025}
+Chen, M., et al. (2025). 
+\newblock Lagrangian relaxation and branch-and-price algorithm for resource assignment problem in divisional seru systems.
+\newblock {\em European Journal of Operational Research}.
+
+\bibitem{Yu2017}
+Yu, Y., et al. (2017). 
+\newblock Integrating seru formation and scheduling decisions in seru production systems.
+\newblock {\em Journal of Manufacturing Systems}.
+
+\bibitem{Wang2023}
+Wang, L., et al. (2023). 
+\newblock Order acceptance and scheduling in divisional seru systems with precedence constraints.
+\newblock {\em Journal of Cleaner Production}.
+
+\bibitem{Li2023b}
+Li, J., et al. (2023b). 
+\newblock Reducing delayed batches in seru production systems: A two-stage approach.
+\newblock {\em Computers \& Industrial Engineering}.
+
+\bibitem{Liu2013}
+Liu, Y., et al. (2013). 
+\newblock Worker assignment and training in converting assembly lines into seru production systems.
+\newblock {\em International Journal of Production Research}.
+
+\bibitem{Ying2017}
+Ying, K. C., \& Tsai, C. F. (2017). 
+\newblock A two-stage heuristic for worker training and assignment problems in seru production systems.
+\newblock {\em Journal of Intelligent Manufacturing}.
+
+\bibitem{Zhang2022b}
+Zhang, Y., et al. (2022b). 
+\newblock Scheduling in seru production systems with de Jong learning effects.
+\newblock {\em Journal of the Operational Research Society}.
+
+\bibitem{Wang2024}
+Wang, L., et al. (2024). 
+\newblock Scheduling and worker assignment in divisional seru systems: A nonlinear model and heuristic approach.
+\newblock {\em International Journal of Production Economics}.
+
 \end{thebibliography}
 
 \newpage

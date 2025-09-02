@@ -83,7 +83,12 @@
     \renewcommand{\translogoPath}{src/RUC/trans-logo.png}
     \renewcommand{\backgroundPath}{src/RUC/background.png}
 }
-
+\DeclareOption{bit}{
+    \renewcommand{\maincolorRGB}{0, 80, 0}
+    \renewcommand{\colorlogoPath}{src/BIT/color-logo.png}
+    \renewcommand{\translogoPath}{src/BIT/trans-logo.png}
+    \renewcommand{\backgroundPath}{src/BIT/background.png}
+}
 \ProcessOptions\relax
 
 % --- typeset & elements settings ---
