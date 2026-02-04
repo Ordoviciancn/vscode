@@ -1,0 +1,81 @@
+\section{Model Assumptions and Nomenclature}
+\subsection{Fundamental Assumptions}
+
+To develop a mathematically tractable model that effectively captures the key dynamics of the battery, this study introduces the following fundamental assumptions in establishing the second-order RC equivalent circuit model, based on the physical characteristics of lithium-ion batteries and typical application scenarios:
+
+\begin{table}[htbp]
+\centering
+\caption{Fundamental Model Assumptions}
+\label{tab:assumptions}
+\begin{tabular}{p{0.22\textwidth}p{0.73\textwidth}}
+\toprule
+\textbf{Category} & \textbf{Description} \\
+\midrule
+\textbf{1. Circuit Equivalence} & The complex internal electrochemical processes (e.g., lithium-ion intercalation/deintercalation, solid-phase diffusion, charge transfer) can be sufficiently approximated by a linear circuit network composed of lumped-parameter elements (resistors, capacitors, voltage sources). Specifically, a topology consisting of an open-circuit voltage source in series with an ohmic resistor and two parallel RC branches is adopted. \\
+\textbf{2. Electrochemical Simplifications} & a) The internal temperature of the battery is assumed uniform and constant, neglecting dynamic effects of temperature variation on model parameters.\\
+& b) The open-circuit voltage $V_{\text{oc}}$ is solely a single-valued function of SOC, and its hysteresis effect is considered negligible.\\
+& c) The polarization dynamics can be described by first-order linear kinetics, with time constants remaining constant during a single discharge process.\\
+\textbf{3. Operational \& Boundary Conditions} & a) The primary focus is on constant-power ($P_0$) discharge conditions, where the output power is precisely set by the external load and remains constant.\\
+& b) Discharge starts from a fully relaxed battery state, i.e., with zero initial polarization voltages: $V_{p1}(0) = V_{p2}(0) = 0$.\\
+& c) The Coulombic efficiency $\eta$ is constant during discharge, typically assumed to be 1.\\
+& d) The power conversion efficiency from the battery terminals to the load, $\eta_{\text{conv}}$, is constant.\\
+\textbf{4. Parameter Properties} & a) For a single simulation, the polarization resistances $R_1, R_2$ and capacitances $C_1, C_2$ are treated as constants, independent of SOC, current, or temperature. Their values are taken from the open dataset from the University of Maryland\cite{Calce2026}\\
+& b) The nominal battery capacity $C_n$ and the State of Health (SOH) are known constants.\\
+& c) The battery terminal voltage must not fall below a preset cutoff voltage $V_{\text{min}}$; discharge is terminated when this limit is reached.\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The aforementioned assumptions aim to strike a balance between model complexity and practicality. 
+Assumptions 1 and 2 form the physical basis of the second-order RC equivalent circuit, simplifying the distributed-parameter, 
+nonlinear electrochemical system into a lumped-parameter, linear dynamic system. Assumption 3 defines the core operational 
+condition (constant-power discharge) and initial/boundary conditions for this study. Assumption 4 significantly simplifies 
+the parameter identification and model-solving process, which is common in engineering practice. Under this combined framework, 
+the dynamic equations are established and can be solved efficiently using numerical methods. 
+All subsequent simulations and analyses are conducted within this framework.
+
+\begin{figure}[H] 
+    \centering
+    \includegraphics[width=0.8\textwidth]{flowchart_battery_model.png}
+    \caption{Framework flowchart of smartphone battery discharge modeling}
+    \label{fig:flowchart}
+\end{figure}
+
+\subsection{Nomenclature}
+The main symbols used in this paper and their descriptions are listed in Table \ref{tab:symbols}.
+\begin{table}[H]
+\centering
+\caption{Nomenclature}
+\label{tab:symbols}
+\begin{tabular}{p{0.18\textwidth}p{0.65\textwidth}p{0.1\textwidth}}
+\toprule
+\textbf{Symbol} & \textbf{Description} & \textbf{Unit} \\
+\midrule
+$V_{\text{oc}}$ & Battery open-circuit voltage, function of SOC & V \\
+SOC & State of Charge, $0 \leq \text{SOC} \leq 1$ & -- \\
+SOH & State of Health, indicating capacity fade, $0 < \text{SOH} \leq 1$ & -- \\
+$V_t$ & Battery terminal voltage & V \\
+$I$ & Battery current (positive for discharge) & A \\
+$P_0$ & Constant discharge power & W \\
+$R_0$ & Ohmic internal resistance & $\Omega$ \\
+$R_1, C_1$ & Polarization resistance and capacitance of the 1st RC network (describing electrochemical polarization) & $\Omega$, F \\
+$R_2, C_2$ & Polarization resistance and capacitance of the 2nd RC network (describing concentration polarization) & $\Omega$, F \\
+$V_{p1}$ & Polarization voltage across the 1st RC network & V \\
+$V_{p2}$ & Polarization voltage across the 2nd RC network & V \\
+$\tau_1 = R_1C_1$ & Time constant of the 1st RC network & s \\
+$\tau_2 = R_2C_2$ & Time constant of the 2nd RC network & s \\
+$C_n$ & Nominal battery capacity & Ah \\
+$\eta$ & Coulombic efficiency (typically 1 for discharge) & -- \\
+$\eta_{\text{conv}}$ & Power conversion efficiency & -- \\
+$V_{\text{min}}$ & Discharge cutoff voltage & V \\
+$\text{SOC}_{\text{min}}$ & Minimum allowable SOC & -- \\
+$t$ & Time & s \\
+$\Delta t$ & Numerical integration time step & s \\
+$\mathbf{x} = [\text{SOC}, V_{p1}, V_{p2}]^\top$ & System state vector & -- \\
+$P_{\text{max}}$ & Instantaneous maximum deliverable power & W \\
+$Q_{\text{disch}}$ & Cumulative discharged capacity & Ah \\
+$I_{\text{avg}}$ & Average discharge current & A \\
+$t_{\text{end}}$ & Discharge termination time & s \\
+\bottomrule
+\end{tabular}
+\end{table}

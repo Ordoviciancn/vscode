@@ -1,0 +1,13 @@
+============================================================
+BATTERY SIMULATION SUMMARY REPORT
+============================================================
+
+1. BATTERY PARAMETERS
+----------------------------------------
+  Name: Li-ion_3Ah
+  Nominal Voltage: 3.7 V
+  Capacity: 3.0 Ah
+  State of Health: 95.0%
+  Ohmic Resistance (R0): 0.05 ¦¸
+  Polarization R1: 0.02 ¦¸, C1: 2000 F
+  Polarization R2: 0.03 ¦¸, C2: 10000 F

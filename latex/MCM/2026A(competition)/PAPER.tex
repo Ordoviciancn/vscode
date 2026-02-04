@@ -1,0 +1,65 @@
+\documentclass[12pt]{article}
+\usepackage[2605502]{easymcm}
+\usepackage{subcaption} 
+\usepackage{enumitem}
+\usepackage{algorithm, algorithmic}
+\usepackage{graphicx, float}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage[super, sort&compress]{natbib}
+\usepackage[pages=some]{background}
+\renewcommand{\abstractname}{Abstract}
+\renewcommand{\contentsname}{Contents}
+\backgroundsetup{           % I insert it in the "title_page.tex" file
+ scale=1,
+ angle=0,
+ opacity=.1,  %% adjust
+ contents={\includegraphics[width=\paperwidth,height=\paperheight]{bg.png}}
+ }
+\usepackage{ulem}
+\usepackage{placeins}
+
+\problem{A}
+\usepackage{mathpazo}
+\title{What Drains Your Battery? A Continuous-Time, Physics-Compliant Model for Smartphone Battery Discharge Prediction}
+
+\renewcommand{\contest}{MCM}
+
+\begin{document}
+\input{ABSTRACT.tex}
+\maketitle  
+\tableofcontents
+% 正文
+\input{INTRO.tex}
+\input{ASSUMPTIONS.tex}
+\input{task1.tex}
+\input{task2.tex}
+\input{task3.tex}
+\input{task4.tex}
+
+\newpage
+\input{thebibliography.tex}
+\newpage
+\section*{Report on the Use of Artificial Intelligence}
+
+In the preparation of this paper, we utilized Large Language Models (LLMs) to enhance the efficiency of coding and the clarity of our writing. The specific usage and our validation process are detailed below:
+
+\begin{itemize}
+    \item \textbf{Google Gemini (Model: 3 PRO)}:
+    \begin{itemize}
+        \item \textbf{Usage:} Used for critical review and refinement of the manuscript text. Specifically, we employed Gemini to polish the Abstract and Introduction to ensure the academic tone was formal and coherent. We also used it to check the logical flow of our arguments regarding the ``Voltage Collapse'' phenomenon.
+        \item \textbf{Human Oversight:} All suggestions made by the AI were manually reviewed. We accepted changes related to grammar and flow but rejected any modifications that altered the physical interpretation of our model.
+    \end{itemize}
+
+    \item \textbf{DeepSeek (Model: DeepSeek-V3/R1)}:
+    \begin{itemize}
+        \item \textbf{Code Assistance:} Used to generate auxiliary code snippets for solving the Differential-Algebraic Equations (DAE) associated with the 2nd-Order RC model. DeepSeek assisted in debugging syntax errors in our Python/MATLAB scripts and optimizing the visualization of the Monte Carlo simulation results.
+        \item \textbf{Translation Assistance:} Used to translate specific technical descriptions from our native language to English to ensure terminological accuracy.
+        \item \textbf{Human Oversight:} The mathematical logic and governing equations in the code were defined entirely by the authors. We validated the AI-generated code by comparing the simulation outputs against theoretical expectations. The translated text was cross-checked to ensure it accurately reflected the original technical intent.
+    \end{itemize}
+\end{itemize}
+
+\vspace{1em}
+\noindent \textit{Declaration: The conceptualization of the Second-Order RC model, the derivation of the coupled power dynamics, the data analysis, and the final conclusions are the original work of the authors.}
+
+\end{document}  % 结束

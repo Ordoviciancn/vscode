@@ -1,0 +1,13 @@
+================================================================================
+EXACT BATTERY REMAINING TIME PREDICTION - TECHNICAL SUMMARY
+================================================================================
+
+1. MATHEMATICAL FRAMEWORK
+------------------------------------------------------------
+System: Differential-Algebraic Equations (DAE)
+State variables: SOC, V_p1, V_p2
+Algebraic variable: Current I
+Constraint: Constant power P = η_conv，V_t，I
+
+Governing Equations:
+dSOC/dt = -η，I/(3600，C_n，SOH)

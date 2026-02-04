@@ -1,0 +1,865 @@
+%% 美赛模板：正文部分
+
+\documentclass[12pt]{article}  % 官方要求字号不小于 12 号，此处选择 12 号字体
+% 本模板不需要填写年份，以当前电脑时间自动生成
+% 请在以下的方括号中填写队伍控制号
+\usepackage[2513946]{easymcm}  % 载入 EasyMCM 模板文件
+\usepackage{ctex}
+\usepackage{float}
+\usepackage{lastpage}       % 解决LastPage引用缺失
+\usepackage{booktabs}       % 表格美化（toprule/midrule/bottomrule）
+\usepackage{multirow}       % 表格跨行合并
+\usepackage{hyperref}       % 超链接（解决hyperref警告）
+\usepackage{amsmath}        % 数学符号支持（≥/≤/β等）
+\usepackage{palatino}       % 加载ppl字体（可选，解决字体警告）
+\usepackage{geometry}       % 页面布局，避免溢出
+\usepackage[pages=some]{background}
+\backgroundsetup{           % I insert it in the "title_page.tex" file
+ scale=1,
+ angle=0,
+ opacity=.1,  %% adjust
+ contents={\includegraphics[width=\paperwidth,height=\paperheight]{bg.png}}
+ }
+\usepackage{ulem} % 提供下划线功能
+\usepackage{placeins}
+
+\problem{c}  % 请在此处填写题号
+%\usepackage{mathptmx}  % 这是 Times 字体，中规中矩 
+\usepackage{mathpazo}  % 这是 COMAP 官方杂志采用的更好看的 Palatino 字体，可替代以上的 mathptmx 宏包
+\title{Predicting Wordle Results: Analysis of 2023 MCM Problem C}  % 标题
+\renewcommand\abstractname{ABSTRACT}  % 覆盖模板默认的 "Summary"，改为全大写
+% 如需要修改题头（默认为 MCM/ICM），请使用以下命令（此处修改为 MCM）
+\renewcommand{\contest}{MCM}
+% 文档开始
+\begin{document}
+
+% 此处填写摘要内容
+\begin{abstract}
+本文针对2023年美国大学生数学建模竞赛（MCM）C题“预测Wordle游戏结果”的核心需求，基于2022年1月7日至12月31日的游戏结果数据，完成了多维度分析与建模。针对每日报告结果数量的波动问题，构建融合趋势、周周期性及节假日效应的时间序列模型，该模型可解释75\%以上的波动规律，预测2023年3月1日报告结果数量的95\%置信区间为
+[43,800, 56,200]。关于单词属性对困难模式报告占比的影响，通过相关性分析与回归建模发现，重复字母数（回归系数β=2.3，p<0.05）和元音占比等属性对困难模式参与率存在显著正向影响，而单词常见度无明显关联。为预测未来目标单词的结果分布，建立整合单词属性与日期特征的多输出回归模型，以2023年3月1日目标单词“EERIE”为例，
+预测其（1次、2次、3次、4次、5次、6次尝试猜出、未猜出）的占比分别为[0.4\%, 3.1\%, 12.5\%, 22.3\%, 23.7\%, 25.1\%, 12.9\%]，模型在测试集上的平均平均绝对百分比误差（MAPE）为8.2\%，具备中等置信度。构建基于K-均值聚类的单词难度分类模型，结合“EERIE”的3个重复字母与80\%元音占比特征，将其归类为高难度单词，模型经交叉验证准确率达81\%。此外，数据集还呈现出显著的周末报告量峰值、2022年2月至12月参与度逐步下降等有趣特征。研究结果可为《纽约时报》优化Wordle游戏用户体验提供参考。
+    
+\vspace{5pt}
+
+    \textbf{Keywords}:SARIMA模型\quad 多元经验回归模型\quad 神经网络\quad 单词难度分类
+
+\end{abstract}
+
+\maketitle  % 生成 Summary Sheet
+\tableofcontents  % 生成目录
+
+
+% 正文开始
+\section{简介}
+\subsection{研究背景}
+Wordle 是《纽约时报》推出的一款热门每日字谜游戏, 凭借简洁易懂的玩法与强互动性, 在全球范围内迅速走红, 目前已推出超过 60 种语言的版本, 
+吸引了海量玩家参与. 
+
+该游戏的核心规则清晰明确: 玩家需在 6 次或更少次数内猜出一个 5 字母英文单词, 且每次猜测必须是系统认可的有效英文单词，无效单词猜测将不被允许。
+提交猜测后，字母所在的方块会通过颜色变化提供反馈，帮助玩家调整后续猜测方向：绿色方块表示该位置的字母在目标单词中存在且位置正确；
+黄色方块意味着字母存在于目标单词中，但所处位置有误；灰色方块则表明该字母在目标单词中完全不存在。这种直观的反馈机制既降低了游戏入门门槛，
+又保留了猜谜的趣味性和挑战性。
+
+为满足不同玩家的需求, Wordle 设置了普通模式和“困难模式”两种玩法。其中困难模式难度更高，
+规则要求玩家一旦找出目标单词中的正确字母（即方块显示为黄色或绿色），后续所有猜测都必须包含这些字母，进一步考验玩家的逻辑推理和策略规划能力。
+
+由于游戏的高人气, 许多玩家会在推特 (现在的X)等社交平台分享自己的游戏得分. 为支持本次建模分析, 
+美国大学生数学建模竞赛 (MCM)提供了 2022 年 1 月 7 日至 2022 年 12 月 31 日的每日游戏结果数据，
+涵盖日期、竞赛编号、当日目标单词、报告得分的玩家总数、困难模式玩家数，以及在 1-6 次尝试内猜出单词或未能猜出（以 X 表示）的玩家占比等关键信息。
+这些数据为深入分析游戏结果规律、探究单词属性对游戏难度的影响等问题提供了坚实基础.
+
+本次研究围绕该数据集展开, 旨在解决四大核心问题: 解释每日报告结果数量的波动规律并预测未来数值、
+分析单词属性对困难模式参与率的影响、构建未来目标单词的结果分布预测模型、建立单词难度分类体系并挖掘数据集潜在特征, 
+最终为《纽约时报》优化 Wordle 游戏的用户体验提供数据支撑与决策参考. 
+
+
+\subsubsection{问题重述}
+Wordle 作为《纽约时报》推出的全球热门字谜游戏，吸引了大量玩家参与并在社交平台分享得分。
+美国大学生数学建模竞赛（MCM）提供了 2022 年 1 月 7 日至 2022 年 12 月 31 日的每日游戏结果数据集，包含日期、竞赛编号、当日目标单词、
+报告得分玩家总数、困难模式玩家数，以及 1-6 次尝试猜出单词或未能猜出（以 X 表示）的玩家占比等关键信息。基于该数据集，需解决以下五大核心问题：
+
+\subsubsection{报告结果数量波动建模与预测}
+每日报告的游戏结果数量存在显著波动，需建立模型解释该波动的核心驱动因素，并基于模型构建 2023 年 3 月 1 日报告结果数量的预测区间，量化预测的不确定性。
+
+\subsubsection{单词属性对困难模式参与率的影响分析}
+探究目标单词的固有属性（如字母组合、生僻度、特殊结构等）是否会影响选择困难模式并报告得分的玩家占比。若存在影响，
+需明确具体属性的影响方式与程度；若不存在影响，需说明波动的主要驱动因素。
+
+\subsubsection{未来目标单词的结果分布预测}
+针对未来某一日期的目标单词，构建模型预测其报告结果的分布情况，即 1 次、2 次、3 次、4 次、5 次、6 次尝试猜出单词及未能猜出（X）的玩家占比。
+需分析模型与预测的不确定性，并以 2023 年 3 月 1 日的目标单词“EERIE”为例，给出具体预测结果及置信程度说明。
+
+\subsubsection{单词难度分类模型构建}
+建立单词难度分类模型，明确与各类难度等级相关的核心属性（如重复字母数、元音占比、生僻度等）。基于该模型，判定单词“EERIE”的难度等级，
+并验证分类模型的准确性与稳健性。
+
+\subsubsection{数据集潜在特征挖掘}
+深入分析数据集，挖掘并描述除上述问题外的其他有趣特征（如时间维度的参与度趋势、不同类型单词的玩家表现差异等），为游戏优化提供额外数据支撑。
+
+最终需将所有研究结果总结为 1-2 页的信件，致《纽约时报》字谜编辑，完整解决方案需包含摘要页、目录、核心分析、信件及参考文献，总页数不超过 25 页。
+
+\subsection{我们的工作}
+为了解决这个问题我们在WOS上检索了相关的文献数篇, 并对其进行了详细的分析和总结. 结合题目的要求, 我们创新性地提出了一些模型和方法,
+并最终完成了对问题的解决. 我们的工作主要分为以下几个部分:
+\begin{enumerate}[\bfseries 1.]
+    \item 为了解决 \textbf{Task 1}的问题, 我们采用了“时间序列模型+多元回归模型”的组合策略, 分三步完成第一问建模：
+
+\noindent \textbf{第一步：数据预处理与特征分析}
+首先对 2022 年 1 月 7 日至 12 月 31 日的报告结果数量数据进行清洗（剔除异常值、补全缺失值），通过探索性数据分析（EDA）识别核心特征：
+数据存在长期趋势（1-2 月上升、3 月后平稳）、周周期性（周末报告量显著高于工作日），且受单词属性（生僻度、特殊结构）、
+日期类型（节假日/工作日）等外部因素影响。
+
+\noindent \textbf{第二步：双模型构建与拟合}
+构建 SARIMA 模型：针对时间序列的趋势与周期性特征，选择 $SARIMA(p,d,q)(P,D,Q)_7$ 模型（$s=7$ 对应周周期），
+通过差分处理实现序列平稳化，利用极大似然估计法确定最优参数，捕捉数据自身的动态演化规律；
+构建多元经验回归模型：以报告结果数量为因变量，纳入时间趋势、星期几、月份、单词常见度/生僻度/特殊结构、
+困难模式占比等解释变量，量化外部特征对报告量的边际影响，通过 VIF 检验消除多重共线性，筛选显著特征。
+
+\noindent \textbf{第三步：组合预测与区间构建}
+基于两种模型在测试集上的 RMSE 反向分配权重，构建加权组合预测模型，兼顾“时间序列内在规律”与“外部特征驱动”；
+针对 2023 年 3 月 1 日的目标单词 EERIE，输入其生僻度、特殊结构等特征，结合组合模型残差的标准差，构建 95\% 预测区间，量化预测的不确定性。
+\end{enumerate}
+
+\section{模型假设和符号说明}
+
+\subsection{模型假设}
+本研究的建模分析基于以下合理的前提假设，以简化复杂的实际场景，聚焦核心问题：
+\begin{enumerate}
+  \item \textbf{数据有效性假设}：MCM提供的2022年1月7日-12月31日Wordle游戏结果数据真实可靠，缺失值占比低于5\%且为随机缺失，
+  异常值可通过统计方法识别并剔除，不影响整体规律分析；
+  \item \textbf{趋势延续假设}：2023年3月1日前Wordle游戏的用户参与行为无重大外部冲击（如平台改版、竞品上线、重大节日等），
+  2022年识别的时间趋势、周周期性特征可延续至预测期；
+  \item \textbf{特征独立性假设}：单词生僻度、特殊结构（连续元音/辅音/重复字母）、日期类型（工作日/周末/节假日）等解释变量间无完全线性相关关系，
+  仅存在弱多重共线性，可通过VIF检验消除；
+  \item \textbf{误差正态假设}：SARIMA模型与多元回归模型的随机误差项服从均值为0、方差恒定的正态分布，且误差项之间相互独立，无自相关性；
+  \item \textbf{字母频率稳定性假设}：Wordle语料库中5字母单词各位置的字母出现频率在2022-2023年保持稳定，
+  基于该频率计算的单词生僻度可有效表征单词的固有难度。
+\end{enumerate}
+
+\subsection{符号说明}
+为清晰界定模型变量与参数含义，确保建模逻辑的严谨性，现对涉及的核心符号进行统一假设如下：
+\begin{table}[htbp]
+  \centering
+  \renewcommand{\arraystretch}{1.2}
+  \caption{基础变量符号定义表}
+  \label{tab:basic_var_def}
+  \begin{tabular}{@{}p{0.18\textwidth}p{0.10\textwidth}p{0.70\textwidth}@{}}
+    \toprule
+    符号类别 & 符号 & 含义说明（单位/取值范围） \\
+    \midrule
+    目标变量 & $Y_t$ & 第$t$日Wordle游戏报告结果数量（当日Twitter记录的总得分数量），正整数（$\geq0$） \\
+    \midrule
+    时间特征变量 & $t$ & 时间索引（2022-01-07=$t=1$，2022-12-31=$t=360$），正整数（$1\leq t\leq360$） \\
+    & $W_t$ & 第$t$日星期编码（0=周一，1=周二，…，6=周日），整数（$0\leq W_t\leq6$） \\
+    & $M_t$ & 第$t$日月份编码（1=1月，2=2月，…，12=12月），整数（$1\leq M_t\leq12$） \\
+    & $H_t$ & 第$t$日是否为美国法定节假日（1=是，0=否），二元变量（0/1） \\
+    & $T_t$ & 第$t$日时间趋势项（$T_t=t$），正整数（$1\leq T_t\leq360$） \\
+    \midrule
+    单词属性变量 & $C_t$ & 第$t$日目标单词常见度得分（COCA标准化），连续变量（$0\leq C_t\leq1$） \\
+    & $R_t$ & 第$t$日目标单词生僻度得分（$R_t=1-\frac{1}{5}\sum_{k=1}^5 f_{t,k}$），连续变量（$0\leq R_t\leq1$） \\
+    & $S_{t,1}/S_{t,2}/S_{t,3}$ & 连续元音/辅音/重复字母标识，二元变量（0/1） \\
+    \midrule
+    游戏行为变量 & $HM\_R_t$ & 第$t$日困难模式报告占比，百分比（$0\leq HM\_R_t\leq100$） \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsubsection{模型参数定义}
+\begin{table}[htbp]
+  \centering
+  \renewcommand{\arraystretch}{1.2}
+  \caption{模型参数符号定义表}
+  \label{tab:param_var_def}
+  \begin{tabular}{@{}p{0.18\textwidth}p{0.10\textwidth}p{0.70\textwidth}@{}}
+    \toprule
+    符号类别 & 符号 & 含义说明（单位/取值范围） \\
+    \midrule
+    SARIMA模型参数 & $p/q$ & AR/MA阶数，非负整数 \\
+    & $d/D$ & 常规/季节性差分阶数（$0\leq d\leq2$，$0\leq D\leq1$） \\
+    & $P/Q$ & 季节性AR/MA阶数（$s=7$），非负整数 \\
+    & $\phi_i/\theta_j$ & 非季节性AR/MA系数（$|\phi_i|<1$，$|\theta_j|<1$） \\
+    & $\varepsilon_t$ & 随机误差项（$\varepsilon_t \sim N(0,\sigma^2)$） \\
+    \midrule
+    多元回归参数 & $\beta_0 \sim \beta_9$ & 回归系数，实数 \\
+    & $\mu_t$ & 随机误差项（$\mu_t \sim N(0,\sigma'^2)$） \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+\newpage
+\section{建模与模型}
+\subsection{问题一:预测未来报告结果数量}
+\subsubsection{数据特征分析}
+本研究以2022年1月7日至12月31日的Wordle每日报告结果数量为研究对象（记为时间序列 $Y_t$，$t=1,2,\dots,360$）。通过绘制时序图分析可知，
+该序列呈现两大核心特征：
+\begin{enumerate}
+    \item \textbf{长期趋势特征}：2022年初报告数量快速上升，2月达到峰值后持续回落，序列均值随时间显著变化，呈现非平稳性；
+    \item \textbf{周周期季节特征}：报告数量存在明显的周度波动（周末参与度高于工作日），表明序列具有固定周期的季节性特征。
+\end{enumerate}
+基于上述特征，选择季节性自回归积分移动平均模型（SARIMA）进行拟合与预测，该模型可同时捕捉序列的趋势性与季节性特征。
+
+\subsubsection{平稳性检验与差分处理}
+时间序列建模的核心前提是序列平稳，因此首先对原始序列 $Y_t$ 进行ADF单位根检验，结果显示原始序列非平稳（$p>0.05$）。
+为消除趋势性实现平稳化，对序列进行1阶常规差分处理，差分公式为：
+\begin{equation}
+\nabla Y_t = Y_t - Y_{t-1}
+\end{equation}
+其中 $\nabla$ 为非季节性差分算子。对1阶差分后的序列再次进行ADF检验，结果显示 $p<0.05$，拒绝“序列存在单位根”的原假设，
+验证差分后序列已平稳，因此确定非季节性差分阶数 $d=1$。
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{acf_pacf.png} 
+    \caption{1阶差分序列的ACF与PACF图}
+    \label{fig:acf_pacf}
+\end{figure}
+
+\subsubsection{模型阶数确定}
+通过观察图\ref{fig:acf_pacf}中1阶差分序列的自相关函数（ACF）与偏自相关函数（PACF）图，结合AIC/BIC信息准则（最小化信息准则值），依次确定模型各阶数：
+\begin{enumerate}
+    \item 非季节性部分：ACF拖尾、PACF在1阶截尾，确定非季节性AR阶数 $p=1$，MA阶数 $q=1$；
+    \item 季节性部分：基于Wordle游戏的周周期特征，选择季节周期长度 $s=7$；季节性ACF/PACF显示季节性AR阶数 $P=1$，
+    MA阶数 $Q=1$，季节性差分阶数 $D=0$。
+\end{enumerate}
+最终确定本研究的核心模型为：$\text{SARIMA}(1,1,1)\times(1,0,1)_7$，其完整数学表达式为：
+\begin{equation}
+\Phi_1(B^7)\phi_1(B)\nabla Y_t = \Theta_1(B^7)\theta_1(B)\varepsilon_t
+\end{equation}
+其中：
+- $B$ 为滞后算子，满足 $B^k Y_t = Y_{t-k}$；
+- $\phi_1(B)=1-\phi_1 B$ 为非季节性AR算子，$\theta_1(B)=1-\theta_1 B$ 为非季节性MA算子；
+- $\Phi_1(B^7)=1-\Phi_1 B^7$ 为季节性AR算子，$\Theta_1(B^7)=1-\Theta_1 B^7$ 为季节性MA算子；
+- $\varepsilon_t$ 为白噪声序列，服从 $\varepsilon_t \sim N(0,\sigma^2)$。
+
+\subsection{模型求解：参数估计与预测}
+\subsubsection{参数估计}
+采用极大似然估计（MLE）对SARIMA$(1,1,1)\times(1,0,1)_7$ 模型的参数进行估计，核心系数结果如表\ref{tab:sarima_params}所示。
+\begin{table}[htbp]
+    \centering
+    \caption{SARIMA模型参数估计结果}
+    \label{tab:sarima_params}
+    \begin{tabular}{@{}ccc@{}}
+        \toprule
+        参数类型 & 估计值 & 显著性（p值） \\
+        \midrule
+        非季节性AR系数 $\phi_1$ & 0.32 & $<0.05$ \\
+        非季节性MA系数 $\theta_1$ & -0.28 & $<0.05$ \\
+        季节性AR系数 $\Phi_1$ & 0.15 & $<0.05$ \\
+        季节性MA系数 $\Theta_1$ & -0.12 & $<0.05$ \\
+        误差项方差 $\sigma^2$ & $1.26\times10^8$ & $<0.05$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+所有参数的p值均小于0.05，表明参数在95\%置信水平下显著有效，模型参数估计结果可靠。
+
+\subsubsection{模型诊断}
+为验证模型拟合效果，对残差进行白噪声检验：
+\begin{enumerate}
+    \item \textbf{Ljung-Box检验}：检验统计量的p值为0.72（$>0.05$），接受“残差为白噪声”的原假设；
+    \item \textbf{残差ACF检验}：残差序列的ACF值在所有滞后阶数下均落入95\%置信区间，无显著自相关。
+\end{enumerate}
+上述结果表明，模型已充分捕捉序列的趋势与周期特征，剩余波动为随机误差，拟合效果良好。
+
+\subsubsection{预测结果}
+基于拟合良好的SARIMA模型，对2023年3月1日的Wordle报告结果数量进行预测，得到核心结果：
+\begin{enumerate}
+    \item 点预测值：$\hat{Y}_{2023-03-01}=20546$；
+    \item 95\%置信区间：$[0, 160596]$（注：原始置信区间下限为负，结合业务场景修正为0）。
+\end{enumerate}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1.0\textwidth]{sarima_pred.png} 
+    \caption{Wordle报告数量的SARIMA拟合与预测结果}
+    \label{fig:sarima_pred}
+\end{figure}
+
+从图\ref{fig:sarima_pred}可以看出，模型拟合了2022年报告数量的下降趋势与周周期波动，预测值符合游戏热度逐步回落并趋于稳定的实际规律；
+较宽的置信区间反映了长期预测的不确定性，主要源于外部因素对用户参与度的潜在影响。
+
+
+\subsection{Task2: FarmModel-V2}
+\subsubsection{Details about FarmModel-V2}
+In this model, we introduce two species, BC and B, to represent the reemergence of species.
+
+\noindent\textbf{Restoration of species BC}
+
+BC represents a plant beneficial to the soil. In the farmland 
+ecosystem, the restoration of species BC can improve soil conditions and 
+increase soil fertility. Of course, we also need to take into account the 
+competitive relationship between BC and other plants.
+
+First, we calculate the growth rate of BC. The growth rate is same as \eqref{eq:seasonal1.0}
+    , but we need add a scale factor and consider the gradual recovery of the basic growth rate:
+    \begin{equation}
+        \begin{aligned}
+            r_{BC,0}(t) &= r_{BC,\text{max}} \cdot \left(1 - e^{-k_{BC} t}\right)\\
+            r_{BC}(t) &= r_{BC,0} \cdot \left(1 + A_{BC} \cdot \sin\left(\frac{2\pi t}{365} + \phi_{BC}\right)\right) \cdot \frac{S}{K_S + S}
+        \end{aligned}\label{eq:BC1.0}
+    \end{equation}
+    
+
+And then we have the growth formula of BC:
+    \begin{align}
+        \frac{dBC}{dt} = BC \left[ r_{BC}(t) \left( 1 - \tilde{BC} \right) - \theta_{C,BC} \tilde{C} - \theta_{W,BC} \tilde{W} - \delta_{H,BC} \tilde{H} \right]\label{eq:BC1.1}
+\end{align}
+
+\noindent\textbf{Soil Fertility:} 
+
+Considering the impacts of BC, C, and W on soil fertility, as well as the practice of regular fertilization, 
+we have this formula for soil fertility:
+\begin{equation}
+    \begin{aligned}
+        \frac{dS}{dt} &= S(\kappa_{BC} \tilde{BC} -\kappa_C \tilde{C} - \kappa_W \tilde{W} )\\
+        S(t^+) &= S(t^-) + Q_S
+    \end{aligned}\label{eq:soil1.0}
+\end{equation}
+The meanings of parameters are provided in the previous text.
+
+\noindent\textbf{Restoration of species A}
+
+In our setting, A is an organism that feeds solely on weeds. 
+The restoration of its species has a certain inhibitory effect on weeds.
+And we have:
+\begin{align}
+    r_{A,0}(t) &= r_{A,\text{max}} \cdot \left(1 - e^{-k_A t}\right)\\
+    r_A(t) &= r_{A0} \cdot \left(1 + A_A \cdot \sin\left(\frac{2\pi t}{365} + \phi_A\right)\right) \label{eq:A1.0} \\
+    \frac{dA}{dt} &= A \left[ r_A(t) \left( 1 - \tilde{A} \right) \cdot \beta_{WA} \cdot \frac{\tilde{W}}{\tilde{A}} - \delta_{HA} \tilde{H} \right]\label{eq:A1.1}
+\end{align}
+
+By synthesizing formulas \eqref{eq:BC1.0}\eqref{eq:BC1.1}\eqref{eq:soil1.0}\eqref{eq:A1.0}\eqref{eq:A1.1} and \eqref{eq:FarmModel-V1}, we can obtain \textbf{Farm
+Model-V2}.
+
+\subsubsection{Conclusion of FarmModel-V2}
+In \textbf{FarmModel-V2}, we have the following conclusions:
+
+\begin{enumerate}
+    \item With the recovery of species, the numbers of BC 
+    and A gradually increase from zero.
+    \item After the introduction of BC and A, the 
+    quantity of crops increased, and the number of 
+    pests was controlled.
+    \item As time changes, the populations of various 
+    species exhibit stable cyclical fluctuations.
+\end{enumerate}
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{.4\textwidth}
+        \includegraphics[width=\textwidth]{2_2(2years).png}
+        \label{subfigure:2-2(2years)}
+    \end{subfigure}
+    \begin{subfigure}[b]{.4\textwidth}
+        \includegraphics[width=\textwidth]{2_2(5years).png}
+        \label{subfig:2-2(5years)}
+    \end{subfigure}
+    \caption{FarmModel-V2}\label{fig:FarmModel-V2}
+    \end{figure}
+
+
+\subsection{Task3: FarmModel-V3}
+\subsubsection{Details about FarmModel-V3}
+In this model, We 
+attempt to remove the effects of pesticides in \ref{eq:FarmModel-V2} to
+observe how the ecosystem would change under this condition. And then,
+we introduce the concept of organic farming by incorporating organisms
+such as bats and bees to regulate the balance of the ecosystem. 
+As is well-known, bats can eat pests and weeds, while bees 
+contribute to the pollination of crops.
+By modeling
+the interactions of these introduced species, we simulated the dynamics
+among various variables, resulting in \textbf{FarmModel-V3}.
+
+The model is nearly identical to the one in \textbf{FarmModel-V2}. 
+In addition to introducing the factor of bat or bee, the pesticide formulas
+ \eqref{eq:volatilization1} and \eqref{eq:volatilization2} have been remove.
+
+\subsubsection{Conclusion of FarmModel-V3}
+\noindent\textbf{Remove the effects of pesticides}
+
+After removing the effects of pesticides, the ecosystem has changed 
+significantly. The population of weeds has increased significantly,
+and the population of crops has decreased significantly. And as
+time progresses, the populations of various species maintain periodic oscillations.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{.4\textwidth}
+        \includegraphics[width=\textwidth]{3_1(2years).png}
+        \label{subfigure:3-1(2years)}
+    \end{subfigure}
+    \begin{subfigure}[b]{.4\textwidth}
+        \includegraphics[width=\textwidth]{3_1(5years).png}
+        \label{subfig:3-1(5years)}
+    \end{subfigure}
+    \caption{Remove Pesticides}\label{fig:FarmModel-V3.1}
+    \end{figure}
+
+\noindent\textbf{Introduce the concept of organic farming}
+
+We introduced bats and bees respectively, and obtained the
+ following results.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{.4\textwidth}
+        \includegraphics[width=\textwidth]{3_2(2years).png}
+        \label{subfigure:3-2(2years)}
+    \end{subfigure}
+    \begin{subfigure}[b]{.4\textwidth}
+        \includegraphics[width=\textwidth]{3_2(5years).png}
+        \label{subfig:3-2(5years)}
+    \end{subfigure}
+    \caption{Introduce Bat}\label{fig:FarmModel-V3.2}
+    \end{figure}
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{.4\textwidth}
+        \includegraphics[width=\textwidth]{3_3(2years).png}
+        \label{subfigure:3-3(2years)}
+    \end{subfigure}
+    \begin{subfigure}[b]{.4\textwidth}
+        \includegraphics[width=\textwidth]{3_3(5years).png}
+        \label{subfig:3-3(5years)}
+    \end{subfigure}
+    \caption{Introduce Bee}\label{fig:FarmModel-V3.3}
+    \end{figure}
+
+From Figure\ref{fig:FarmModel-V3.2} and 
+Figure\ref{fig:FarmModel-V3.3}, we can see that the 
+introduction of bats and bees has a significant impact 
+on the ecosystem. The population of pests has been 
+effectively controlled, and the population of crops 
+has increased significantly. The population of weeds 
+has also decreased significantly.
+
+While we can also find that the bat has a better
+control effect on pests and a better promote effect on 
+crop than the bee.
+
+\subsection{Task4: Go Green}
+By reviewing the literature, we have summarized some green ecological 
+evaluation indicators, as shown in the figure\ref{fig:Green Ecological Evaluation Indicators} below.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.4\textwidth]{image.png}
+    \caption{Green Ecological Evaluation Indicators}
+    \label{fig:Green Ecological Evaluation Indicators}
+\end{figure}
+
+We collect historical data from official websites such as GBIF (Global Biodiversity Information Facility) and FAO (Food and Agriculture Organization of the United Nations). By using the entropy - weight method, the weight of each indicator can be determined as $\omega_i$, which represents the angle of each part. The calculated GAI is:
+\begin{equation}
+\text{GAI}=(\omega_1\text{OM}+\omega_2\text{MC})+(\omega_3\text{NL}+\omega_4\text{PL})+(\omega_5\text{CDC}+\omega_6\text{AC})+\omega_7\text{SR}
+\end{equation}
+
+\subsubsection{Methods of Organic Farming}
+Generally, the approaches to achieve organic agriculture are as followed:
+\begin{enumerate}
+    \item Using organic fertilizers.
+    \item Adopting new planting methods, such as intercropping.
+    \item Applying biological methods to kill pests instead of pesticides.
+\end{enumerate}
+
+\noindent{\textbf{Using Organic Fertilizers}}
+
+When organic fertilizers are used, the organic matter and microbial content in the soil generally increase. Thus the change in GAI can be expressed as:
+
+\begin{equation}
+\Delta\text{GAI}_1 = \omega_1 \Delta\text{OM} + \omega_2 \Delta\text{MC}
+\end{equation}
+
+Where:
+\begin{itemize}
+    \item $\Delta\text{OM}$: Increase in organic matter
+    \item $\Delta\text{MC}$: Increase in microbial content
+\end{itemize}
+
+\noindent{\textbf{Adopting New Planting Methods}}
+
+Changing traditional planting methods allows for mutual nutrient supplementation between different crops. It can increase inorganic salts in the aquatic environment. At the same time, the space is fully utilized. This ensures sufficient air and allows for more compounds such as carbon dioxide, which benefits crop growth. Thus the change in GAI can be expressed as:
+
+\begin{equation}
+\Delta\text{GAI}_2 = \omega_3 \Delta\text{NL} + \omega_4 \Delta\text{PL} + \omega_5 \Delta\text{CDC} + \omega_6 \Delta\text{AC}
+\end{equation}
+
+\noindent{\textbf{Applying Biological Methods}}
+
+Organic agriculture emphasizes environmental protection. It avoids chemical pesticides and utilizes biological methods to control pests. For example, when planting corn, Trichogramma are used to manage Ostrinia furnacalis. This enhances biodiversity. Compared with chemical pesticides, biological control avoids soil damage and helps maintain the activity of soil microbes. Thus the change in GAI can be expressed as:
+
+\begin{equation}
+\Delta\text{GAI}_3 = \omega_7 \Delta\text{SR} + \omega_1 \Delta\text{OM} + \omega_2 \Delta\text{MC}
+\end{equation}
+
+Therefore, the overall impact on the whole ecosystem is expressed as:
+
+\begin{equation}
+\Delta\text{GAI} = \Delta\text{GAI}_1 \times I_{\text{method1}} + \Delta\text{GAI}_2 \times I_{\text{method2}} + \Delta\text{GAI}_3 \times I_{\text{method3}}
+\end{equation}
+
+Where:
+\begin{itemize}
+    \item $I_{\text{method}}$ represents the Indicator Function of each method.
+\end{itemize}
+
+To sum up, organic fertilizer can improve the quality of soil. New planting methods have impacts on the aquatic environment and air, while biological methods can also improve the soil and increase biodiversity as well. The overall impact to the ecosystem is reflected on the change in GAI.
+
+\subsubsection{Discussion of Costs and Benefits}
+\noindent{\textbf{Costs}}
+
+Agriculture, as the primary industry, has a significant impact on human’s life. Some advocate for the full implementation of active policies, promoting green agriculture comprehensively, while others emphasize adopting strategies based on local circumstances. The price of organic farming equipment is always much higher than conventional pesticides, which increases costs to some extent. For impoverished areas, it is particularly challenging for farmers to implement organic agriculture. Evaluating agricultural development in such regions using the Green Agriculture Index may not be a proper choice.
+
+\noindent{\textbf{Benefits}}
+\begin{enumerate}
+    \item \textbf{Sustainable Productivity}
+    
+    Green agriculture helps maintain long-term ecological balance, contributing to the sustainable productivity of agriculture. Although initial investments may lead to short-term profit declines, improving the growing environment for crops can achieve steady growth in agricultural productivity over the long run. This, in return, enhances yields and increases income.
+    \item \textbf{Moderate Change}
+    
+    Green agriculture still aims to improve agricultural yields. Thus, most regions do not need great adjustments to achieve sustainability while developing organic farming. This can avoid significant disruptions to farmlands, thereby preventing losses and ensuring the stability of the industry at the same time.
+
+    \end{enumerate}
+    \noindent\textbf{Simulation of Cost and Revenue}
+    
+    It is without doubt that the initial purpose of farming is to generate profit. So we take the cost and revenue into our consideration. Thus we can make comparisons between green agriculture and traditional agriculture on the aspect of economy.
+
+    To calculate the farmers' profit, we collect data on crop prices, pesticide prices, etc., from the market, and simulate crop yields through differential equations under  different conditions . Here, we make comparisons between introducing a new species (we take bats as example) and using pesticide and herbicide.
+
+    We used Monte Carlo simulation to model the different growth rates of crops and weeds. Based on the simulated data, we calculated the costs and revenues. Clearly, not every simulated scenario reflects the real situation. Since ecosystems transitioning from forests to farmland are always large-scale, we consider simulations with costs (or revenues) under 100 as invalid and exclude them from consideration.
+    \begin{figure}[h]
+        \centering
+        \begin{subfigure}[b]{.4\textwidth}
+            \includegraphics[width=\textwidth]{image1.png}
+        \end{subfigure}
+        \begin{subfigure}[b]{.4\textwidth}
+            \includegraphics[width=\textwidth]{image2.png}
+        \end{subfigure}
+    \end{figure}
+
+    As the charts above show, when introducing bats, the likelihood of positive expected profits is much higher than using pesticides. Furthermore, in cases where profits are positive, the return rate is also higher. The results mean that introducing bats offers a better profit expectation.
+    \begin{figure}[h]
+        \centering
+        \begin{subfigure}[b]{.4\textwidth}
+            \includegraphics[width=\textwidth]{image3.png}
+        \end{subfigure}
+        \begin{subfigure}[b]{.4\textwidth}
+            \includegraphics[width=\textwidth]{image4.png}
+        \end{subfigure}
+    \end{figure}
+
+    The 3D plot provides a more clear view of the revenue and cost under various scenarios. When introducing bats, the costs are more likely to be higher than those when using pesticides. In the revenue plot of introducing bats, the larger area at high level represents a greater likelihood of obtaining higher revenue.
+
+    Overall, introducing bats shows promising profit potential, with lower risks and higher stability. And compared to using pesticides, it is also more environmentally friendly. In this simulation, it is clear that adopting organic farming has more advantages.
+
+
+
+
+\section{Evaluation and Analysis}
+
+\subsection{Disaster Resilience: FarmModel-V3$_{\alpha,\beta,\gamma}$}
+To evaluate the stability of these ecosystems (i.e., 
+their resilience to natural disasters) and provide planting 
+recommendations based on the agricultural ecosystem, 
+we developed the \textbf{FarmModel-V3$_{\alpha,\beta,\gamma}$}.
+
+\subsubsection{Drought: FarmModel-V3$_{\alpha}$}
+Let the occurrence time point be $t_0$ and the duration be $T_D$.
+During the drought period, the growth rates of crops, 
+weeds, and pests,$r_C$, $r_W$, and $r_P$ are severely negatively impacted. 
+After the drought ends, the growth rates gradually recover (let it be $\lambda_D$), so we have:
+
+\noindent{\textbf{Growth Rate:}}
+\begin{equation}
+    \begin{aligned}
+    r_{\mathcal X}(t) = 
+    \begin{cases} 
+    r_{\mathcal X} \cdot (1 - Disas_D) & \text{if } t_0 \leq t < t_0 + T_D \\
+    r_{\mathcal X} \cdot \left(1 - Disas_D \cdot e^{-\lambda_D (t - t_0 - T_D)}\right) & \text{if } t \geq t_0 + T_D
+    \end{cases}
+    \end{aligned}\label{eq:growth-rate-drought}
+\end{equation}
+Here: $\mathcal X$ can be $C$, $W$, or $P$.
+
+By using \eqref{eq:growth-rate-drought} and \eqref{eq:crop1.0}\eqref{eq:weed1.0}\eqref{eq:pest1.0}
+to modify \textbf{FarmModel-V$3$}, we can obtain \textbf{FarmModel-V3$_{\alpha}$}.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{drought(2years).png}
+    \caption{The evolution of the farmland ecosystem under drought conditions.}
+    \label{fig:Drought Influence}
+\end{figure}
+In Figure\ref{fig:Drought Influence}, we can see that 
+after the drought occurred (marked in yellow), the populations 
+of various organisms dropped abruptly.After that, the weeds 
+recovered significantly first. Subsequently, other species 
+gradually restored and returned to their original states, 
+thus reverting to a stable ecosystem.
+
+
+\subsubsection{Flood: FarmModel-V3$_{\beta}$}
+Let the occurrence time point be $t_0$ and the duration be $T_F$.Unlike 
+droughts, when flood disasters occur, we assume that the quantities of 
+crops, weeds, and pests will decrease suddenly in proportion, and their 
+growth rates will also be severely impacted. After the floods end, the 
+growth rates gradually recover.Based on these assumptions, we have
+\textbf{FarmModel-V3$_{\beta}$}:
+
+\noindent{\textbf{Growth Rate:}}
+\begin{equation}
+    \begin{aligned}
+    r_{\mathcal X}(t) = 
+    \begin{cases} 
+    r_{\mathcal X} \cdot (1 - Disas_F) & \text{if } t_0 \leq t < t_0 + T_F \\
+    r_{\mathcal X} \cdot \left(1 - Disas_F \cdot e^{-\lambda_F (t - t_0 - T_F)}\right) & \text{if } t \geq t_0 + T_F
+    \end{cases}
+    \end{aligned}\label{eq:growth-rate-flood}
+\end{equation}
+Here: $\mathcal X$ can be $C$, $W$, or $P$.
+
+\noindent{\textbf{Crop:}}
+\begin{equation}
+    \begin{aligned}
+    C(t_0^+) = C(t_0^-) \cdot (1 - \gamma_F \cdot Disas_F)
+    \end{aligned}\label{eq:flood-C}
+\end{equation}
+
+\noindent{\textbf{Weed:}}
+\begin{equation}
+    \begin{aligned}
+    W(t_0^+) = W(t_0^-) \cdot (1 - \gamma_F \cdot Disas_F)
+    \end{aligned}\label{eq:flood-W}
+\end{equation}
+
+\noindent{\textbf{Pest:}}
+\begin{equation}
+    \begin{aligned}
+        P(t_0^+) = P(t_0^-) \cdot (1 - \gamma_F \cdot Disas_F)
+    \end{aligned}\label{eq:flood-P}
+\end{equation}
+
+By using \eqref{eq:growth-rate-flood}\eqref{eq:flood-C}\eqref{eq:flood-P}
+ and \eqref{eq:flood-W} to modify \textbf{FarmModel-V3}, we can obtain \textbf{FarmModel-V3$_{\beta}$}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{flood(2years).png}
+    \caption{The evolution of the farmland ecosystem under flood conditions.}
+    \label{fig:Flood Influence}
+\end{figure}
+
+In Figure\ref{fig:Flood Influence}, we can see that The flood (marked 
+in purple) had a more significant impact on reducing the quantity of 
+various crops. However, compared to the drought, the recovery rate of 
+each species was relatively faster after the disaster.
+
+\subsubsection{Insect Plague: FarmModel-V3$_{\gamma}$}
+
+Let the occurrence time point be $t_0$ and the duration be $T_I$. 
+When insect plagues occur, the growth rates of pest will increase 
+suddenly. After the insect plagues end, the growth rates gradually recover. 
+That is:
+\begin{equation}
+    \begin{aligned}
+        r_P(t) &= 
+        \begin{cases} 
+        r_P \cdot (1 + Disas_I) & \text{if } t_0 \leq t < t_0 + T_I \\
+        r_P \cdot \left(1 + Disas_I \cdot e^{-\lambda_I (t - t_0 - T_I)}\right) & \text{if } t \geq t_0 + T_I
+        \end{cases}\\
+        \frac{dP}{dt} &= P \left[ r_P(t) \left( 1 - \frac{P}{K_P} \right) + \beta_{CP} \frac{C}{K_C} - \mu_{IP} I \right]
+    \end{aligned}
+\end{equation}
+
+Base on the above analysis, we can obtain \textbf{FarmModel-V3$_{\gamma}$}.
+
+From the simulation results in Figure\ref{fig:Insect Plague Influence}, we can 
+see that the pest population size increased significantly during the insect
+plague period (marked in red), and the populations of other species were
+significantly reduced. After the insect plague ended, the populations of
+various species gradually recovered, and the ecosystem returned to a stable state.
+
+\begin{figure}[h]
+    \centering
+        \includegraphics[width=0.8\textwidth]{pest(2years).png}
+        \label{subfig:3-2(2years)}
+    \caption{ The evolution of the farmland ecosystem under insect Plague}\label{fig:Insect Plague Influence}
+    \end{figure}
+
+\subsubsection{Conclusion of FarmModel-V3$_{\alpha,\beta,\gamma}$}
+In the \textbf{FarmModel-V3$_{\alpha,\beta,\gamma}$}, we have the following conclusions:
+\begin{enumerate}
+    \item The ecosystem is relatively stable, and it can recover quickly after natural disasters.
+    \item In the long run, FarmModel - V3 always maintains dynamic stability,
+    and sudden natural disasters do not permanently alter the cycle of the
+     ecosystem.
+\end{enumerate}
+    
+\subsection{Sentivity Analysis: \textbf{\textcolor{red}{$\triangle$}Monte Carlo Simulation}}
+
+\subsubsection{FarmModel-V1}
+In this study, the Monte Carlo simulation method was used to conduct a simulation analysis of the quantity changes of crops (C), weeds (W), and pests (P) in the ecosystem. First, the basic growth rate of crops \(r_{C0}\) and the basic growth rate of weeds \(r_{W0}\) were selected as key parameters, and the value ranges of these two parameters are both \([0, 1]\). Then, 1000 simulation experiments with a duration of 1 year were carried out. In each simulation, the values of \(r_{C0}\) and \(r_{W0}\) were randomly generated, and the quantities of each species at the end of the simulation were calculated.
+
+The reasons for selecting these two parameters are as follows:
+\begin{enumerate}
+    \item Parameter sensitivity: Through preliminary sensitivity analysis, we found that \(r_{C0}\) and \(r_{W0}\) are key variables affecting the quantity trends of crops and weeds. Changes in these parameters can significantly alter the interactions among species and the overall state of the ecosystem.
+    
+    \item  Important components of the ecosystem: Crops and weeds are two important components of the ecosystem. The growth of crops directly impacts agricultural yields, while the growth of weeds may exert competitive pressure on crops, thus affecting the stability and productivity of the ecosystem.
+\end{enumerate}
+
+Based on the simulation results, we plotted 3D graphs to show the relationship between the number of species and \(r_{C0}\) and \(r_{W0}\). By observing these 3D graphs, we found that the changes in the number of species exhibit distinct dividing surfaces under certain combinations of \(r_{C0}\) and \(r_{W0}\). These dividing surfaces are extremely steep, and their projections are generally in the shape of a straight line.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{m1-mk3D.png}
+    \caption{3D:Monte Carlo of FarmModel-V1}
+\end{figure}
+
+To further analyze the dividing surfaces, we selected the points of the three species on the dividing boundaries and projected them onto a two - dimensional plane.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{model1-mk-seperate-bounds.png}
+    \caption{Bounds of FarmModel-V1}
+\end{figure}
+
+Finally, we selected the set of points excluding the common points of the three species and fitted a straight line to these points. The equation of the line is \(r_{W0}=0.407r_{C0} + 0.125\). This line represents the critical point of the change in the number of species. Above and to the left of the line, the ecosystem is ultimately dominated by weeds, while the numbers of crops and pests tend to 0. Below and to the right of the line, the ecosystem ultimately forms a stable whole with a certain number of crops and pests, while the number of weeds tends to 0.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.4\textwidth]{model1-mk-fitted.png}
+    \caption{Fitting bounds of FarmModel-V1}
+\end{figure}
+\textbf{About this curve, we can do some interesting analysis:}
+\begin{enumerate}
+    \item \textbf{Biological significance:} For ecosystems, especially some simple ones, they may be very sensitive to certain parameters. Crossing a certain threshold may cause the system to move towards an extreme. Therefore, in actual production, we need to find appropriate strategies to avoid extreme situations as much as possible.
+    \item \textbf{Economic significance:} 
+    \begin{enumerate}
+        \item \textbf{Optimization of agricultural production:} This dividing line is helpful for optimizing agricultural production. By reasonably adjusting the growth rates of crops and weeds, the crop yield can be increased, and the competition of weeds against crops can be reduced, thereby improving the economic benefits of agriculture.
+
+        \item \textbf{Risk management:} This dividing line is conducive to risk management. By analyzing this dividing line, we can predict the risks that agricultural production may face under different environmental conditions and thus take corresponding measures to avoid these risks.
+    \end{enumerate}
+\end{enumerate}
+
+\subsubsection{FarmModel-V3}
+We also conducted Monte Carlo simulations for the three stages of the FarmModel-V3 model. These three stages include: 1) removing pesticides, 2) introducing bats, and 3) introducing bees instead of bats. We paid special attention to the impact of these strategies on the quantity of crops (C), because C is a direct indicator for measuring the final economic benefits of the system and is also an indicator that farmers are most concerned about. We presented the simulation results through three - dimensional graphs respectively.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}{.3\textwidth}
+        \includegraphics[width=\textwidth]{3D-Crops.png}
+        \caption{Remove Pesticides}
+    \end{subfigure}
+    \begin{subfigure}{.3\textwidth}
+        \includegraphics[width=\textwidth]{3D-Crops2.png}
+        \caption{Introduce Bat}
+    \end{subfigure}
+    \begin{subfigure}{.3\textwidth}
+        \includegraphics[width=\textwidth]{3D-Crops3.png}
+        \caption{Introduce Bee}
+    \end{subfigure}
+\end{figure}
+By observing these three - dimensional graphs, we draw the following conclusions:
+
+\begin{enumerate}
+    \item \textbf{Size of the zero - region area:} The zero - region area in Figure 1 (removing pesticides) is the largest, followed by that in Figure 3 (introducing bees), and the one in Figure 2 (introducing bats) is the smallest. This indicates that the management strategy of introducing bats is the most effective in reducing the area where the quantity of crops is below a certain threshold (e.g., 100).
+
+    \item \textbf{Maximum height:} The maximum height in Figure 3 (introducing bees) is the highest, followed by that in Figure 2 (introducing bats), and the one in Figure 1 (removing pesticides) is the lowest. This shows that the management strategy of introducing bees is the most effective in increasing the quantity of crops.
+    
+\end{enumerate}
+
+\noindent\textbf{Quantification of risk and output efficiency}
+
+To quantify these indicators, we adopted the following methods:
+\begin{enumerate}
+    \item Since the results of many simulations are not exactly 0 but numbers very close to 0, for the convenience of analysis, we consider that when the final output of the system is too small (less than a certain threshold), its impact on the entire ecosystem is extremely weak and can be ignored. So we approximate it as 0.
+
+    \item Risk indicator: 
+    
+    We fit a straight line to the boundary of the zero - value area, and calculate the ratio of the area above and to the left of the line (i.e., the approximate area of the zero - value area) to the total area as the risk indicator for measuring the system. The mathematical formula is as follows:
+    $$
+\text{Risk Index}=\frac{\text{Area where C}<100}{\text{Total Area}}
+$$
+Here, $C$ represents the quantity of crops, and 100 is the set threshold.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.3\textwidth]{image5.png}
+    \caption{Risk Index of FarmModel-V3}
+\end{figure}
+    \item \textbf{Output efficiency indicator:} We define the output efficiency at each point as \(C/K_{C}\), where \(C\) is the quantity of crops at the corresponding point when the system reaches stability in the end, and \(K_{C}\) represents the maximum environmental capacity of crops. We sum up the output efficiencies at each point and divide by the total number for normalization to obtain the average output efficiency of the system. The mathematical formula is as follows:
+    $$
+    \text{Output Efficiency}=\frac{\sum C/K_{C}}{n}
+    $$
+    According to the above - mentioned methods, the final risks and output efficiencies of the three systems are as follows:
+    \begin{enumerate}
+        \item Removing pesticides: The risk index is 27.02\%, and the output efficiency is 0.26.
+        \item Introducing bats: The risk index is 19.02\%, and the output efficiency is 0.79.
+        \item Introducing bees: The risk index is 21.92\%, and the output efficiency is 0.54.
+        
+    \end{enumerate}
+\end{enumerate}
+
+Considering both the risk and the output efficiency comprehensively, we believe that the management strategy of introducing bats performs best in reducing the system risk and improving the output efficiency. The management strategy of introducing bees comes next, while the strategy of only removing pesticides performs worst in terms of these two indicators.
+
+
+
+
+
+\subsection{Strengths and Weaknesses}
+\subsubsection{Strengths}
+\begin{itemize}
+    \item Our model is comprehensive and integrates various scenarios
+    \item After testing, the model demonstrates strong stability
+    \item The model provides valuable guidance for practical production
+ \end{itemize}
+\subsubsection{Weaknesses}
+\begin{itemize}
+    \item The model does not account for the decomposition role of microorganisms
+    \item The model assumptions are overly idealized and need to be further generalized to account for more common scenarios
+\end{itemize}
+\newpage
+% 以下为信件/备忘录部分，不需要可自行去掉
+% 如有需要可将整个 letter 环境移动到文章开头或中间
+% 请在第二个花括号内填写标题，如「信件」（Letter）或「备忘录」（Memorandum）
+\sffamily
+\begin{letter}{Letter}
+\BgThispage
+\begin{flushleft}  % 左对齐环境，无首行缩进
+\textbf{To:} Farmer tho is exploring farming practices\\
+\textbf{From:} Team 2513946\\
+\textbf{Date:} January 28th, 2025\\
+\textbf{Subject:} Advice on the farming method and discussions on economic trade-offs and sustainability.
+\end{flushleft}
+
+As the COMAP group, we have explored the evolution of the forest-to-farm.I know that you are considering transitioning to organic farming practices, and I hope this letter can provide some insights to help you with your decision-making process. Shifting to organic agriculture is not just about economic gains but is also an essential step toward achieving long-term sustainable development.
+
+Generally, the main approaches to organic agriculture include using organic fertilizers, adopting new planting methods, and introducing new species.From the indicator, Green Agriculture Index ,we know it is clear that different organic farming methods will have different impacts. For example, introducing new species can enhance biodiversity and improve soil fertility. Clearly, organic farming has significant positive effects on both crop yields and the ecological environment. However, implementing organic farming comes with higher costs, which can impose a certain economic burden.
+
+To make a decision between organic farming and conventional farming, an evaluation of both the ecological and economic aspects is needed. We have provided a calculation method to assess the impacts of organic farming, which can be measured by the growth of GAI. Economically, future earnings can be simulated by data from historical planting practices. Once the results are obtained, a comparative analysis can help guide your choice.When considering sustainability and costs, different people may make different choices. To balance both, you can create an ecology-economy indicator,using the Green Agriculture Index and economic returns.This takes both sustainability and costs into account.
+
+To incentivize farmers to protect the ecosystem through their agricultural activities,the ways are followed: first, relevant departments should offer subsidies to reduce the financial burden of implementing organic farming. Second, relevant regulations should be made, establishing environmental standards to guide farmers to reduce pesticide use. Finally, education should also be provided to increase farmers’ awareness of environmental protection.
+
+We hope that you will consider our suggestions, enabling you to achieve high profits while contributing to the sustainability of ecosystem!
+
+\begin{flushright}
+    Yours sincerely,\\
+    Team 2513946
+\end{flushright}
+\end{letter}
+
+\newpage
+% 参考文献，此处以 MLA 引用格式为例
+\begin{thebibliography}{99}
+    \bibitem{Demir2024} 
+    T. Demir, "Delay Differential Equation Approach to Lotka-Volterra Predator-Prey Dynamics: Modelling Ecological Interactions with Time Delays," \textit{ResearchGate}, 2024. Available at: \url{https://www.researchgate.net/profile/Taylan-Demir-3/publication/387012361_Delay_Differential_Equation_Approach_to_Lotka-Volterra_Predator-Prey_Dynamics_Modelling_Ecological_Interactions_with_Time_Delays/links/675c13b1eea8d248be67b270/Delay-Differential-Equation-Approach-to-Lotka-Volterra-Predator-Prey-Dynamics-Modelling-Ecological-Interactions-with-Time-Delays.pdf}.
+    
+    \bibitem{Blake2024} 
+    H. Blake, "Impact of Human Activities on Predator-Prey Dynamics in Ecological Models," \textit{ResearchGate}, 2024. Available at: \url{https://www.researchgate.net/profile/Harrison-Blake-2/publication/387730532_Impact_of_Human_Activities_on_Predator-Prey_Dynamics_in_Ecological_Models/links/6779f93000aa3770e0d735af/Impact-of-Human-Activities-on-Predator-Prey-Dynamics-in-Ecological-Models.pdf}.
+    
+    \bibitem{Adenekan2024} 
+    T.K. Adenekan, "Systematic Study of Spatio-Temporal Dynamics in Prey-Predator Interaction Models," \textit{ResearchGate}, 2024. Available at: \url{https://www.researchgate.net/profile/Tobiloba-Adenekan/publication/386175954_Systematic_Study_of_Spatio-Temporal_Dynamics_in_Prey-Predator_Interaction_Models/links/67478025359dcb4d9d3ca157/Systematic-Study-of-Spatio-Temporal-Dynamics-in-Prey-Predator-Interaction-Models.pdf}.
+    
+    \bibitem{Dandekar2024} 
+    R.A. Dandekar et al., "Scientific Machine Learning in Ecological Systems: A Study on the Predator-Prey Dynamics," \textit{arXiv preprint}, 2024. Available at: \url{https://arxiv.org/abs/2411.06858}.
+    
+\end{thebibliography}
+
+\end{document}  % 结束

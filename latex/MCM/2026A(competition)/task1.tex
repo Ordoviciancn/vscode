@@ -1,0 +1,321 @@
+\section{Problem 1: Model Development and Solution}
+\subsection{Model Development}
+To accomplish the objective of Task 1, an equivalent circuit model was first developed in this study. 
+This model abstracts the dynamic behavior of the battery into lumped-parameter circuit components, 
+thereby capturing the coupled evolution of the State of Charge (SOC), terminal voltage, and polarization state 
+under constant-power discharge conditions.
+\subsubsection{Circuit Architecture and Physical Mechanisms}
+To characterize the dynamic characteristics of lithium-ion batteries, 
+a second-order RC equivalent circuit model is adopted. This model is constructed based on the internal electrochemical processes, 
+abstracting and representing the complex physical mechanisms as a network of lumped-parameter circuit elements. 
+It achieves a favorable trade-off between modeling accuracy and computational burden.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{RC_circuit_exact.png}
+    \caption{The Second-Order RC Equivalent Circuit Model for Lithium-Ion Batteries}
+    \label{fig:rc_circuit}
+\end{figure}
+
+As illustrated in Figure \ref{fig:rc_circuit}, the second-order RC equivalent circuit model(2ndRC-ECM) is primarily composed 
+of the following key components connected in series:
+
+\begin{enumerate}[label=(\alph*)]
+    \item \textbf{Open-Circuit Voltage Source} $V_{\text{oc}}(\text{SOC})$: It is used to represent the thermodynamic equilibrium 
+    potential of the battery. Its magnitude is a monotonically nonlinear function of the state of charge (SOC). 
+    To accurately capture this relationship, a seventh-order polynomial is employed for the fitting, as given by Equation: 
+
+    \begin{equation}
+    V_{oc}(\text{SOC}) = \sum_{k=0}^{7} a_k \text{SOC}^k
+    \label{eq:voc}
+    \end{equation}
+    
+    \item \textbf{Ohmic Internal Resistance} $R_0(\text{SOC})$:
+    To simplify the model, this study initially assumes a constant temperature.
+    Under this condition, the relationship between $R_0$ and SOC is constructed
+    using an interpolation function based on experimental data from \cite{Chunling2024},
+    as follows:
+
+    \begin{equation}
+    R_0(\text{SOC}) = \text{interp}\left(\text{SOC},\; \{\text{SOC}_i\},\; \{R_{0,i}\}\right)
+    \label{eq:r0}
+    \end{equation}
+
+    where $\{\text{SOC}_i\}$ and $\{R_{0,i}\}$ represent the discrete SOC points and corresponding
+    ohmic resistance values obtained from experimental measurements, and $\text{interp}(\cdot)$
+    denotes a cubic spline interpolation function to ensure smooth and continuous variation
+    of resistance with SOC.
+
+    \item \textbf{First RC Network} $(R_1, C_1)$: Simulates the \textbf{electrochemical polarization} process, 
+    corresponding to the transfer impedance and double-layer capacitance effects at the electrode/electrolyte interface. 
+    Its time constant $\tau_1 = R_1C_1$ is typically in the order of seconds, reflecting the fast dynamic behavior of the system.
+    
+    \item \textbf{Second RC Network} $(R_2, C_2)$: Simulates the \textbf{spontaneous polarization} process, 
+    corresponding to the solid diffusion of lithium ions within the active material particles of the electrode. 
+    Its time constant $\tau_2 = R_2C_2$ is typically in the order of hundreds of seconds, 
+    reflecting the slow dynamic behavior of the system.
+\end{enumerate}
+
+\subsubsection{Characterization and Fitting of Open-Circuit Voltage}
+Leveraging the open-source experimental datasets from the CALCE laboratory at the University of Maryland \cite{Calce2026}, 
+a high-order polynomial regression is employed to model the OCV-SOC relationship. Specifically, analysis of the standard 
+charge-discharge cycle data determined that a seventh-order polynomial can accurately capture the nonlinearity of this relationship, 
+with a coefficient of determination ($R^2$) exceeding 0.99. The resulting fitted expression is given in Equation\ref{eq:voc_fit}:
+\begin{equation}
+V(\text{SOC}) = \sum_{k=0}^{7} a_k \cdot \text{SOC}^k
+\label{eq:voc_fit}
+\end{equation}
+\[
+a_7 = 66.939, a_6 = -248.739, a_5 = 371.911, a_4 = -291.517, 
+\]
+\[
+a_3 = 132.659, a_2 = -36.387, a_1 = 6.069, a_0 = 3.259
+\]
+To visually assess the fitting performance, Figure \ref{fig:ocv_soc} presents a comparison between the experimentally 
+measured OCV-SOC data points and the seventh-order polynomial fitted curve. As shown, the fitted curve smoothly traverses 
+the data points and exhibits strong agreement across the entire SOC range (0-1), thereby validating the high accuracy and 
+reliability of the fitted relationship.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{figure5_ocv_soc_relationship.png}
+    \caption{Measured Data and Polynomial Fitted Curve for $V_{\text{oc}}$ vs. SOC Relationship}
+    \label{fig:ocv_soc}
+\end{figure}
+
+\subsubsection{System Dynamic Equations}
+Based on Kirchhoff's Voltage Law (KVL) and Current Law (KCL), the continuous-time state-space equations of the model can be established.
+
+\paragraph{Voltage Polarization Dynamics}
+For the first RC network, the current $I_{C_1}$ through the capacitor $C_1$ satisfies $C_1 dV_{p1}/dt = I_{C_1}$. 
+The current $I_{R_1} = V_{p1}/R_1$ through the resistor $R_1$. According to KCL, $I(t) = I_{C_1} + I_{R_1}$. 
+Therefore, we have:
+\begin{equation}
+\frac{dV_{p1}}{dt} = \frac{I(t)}{C_1} - \frac{V_{p1}}{R_1C_1}
+\label{eq:dvp1}
+\end{equation}
+Similarly, for the second RC network:
+\begin{equation}
+\frac{dV_{p2}}{dt} = \frac{I(t)}{C_2} - \frac{V_{p2}}{R_2C_2}
+\label{eq:dvp2}
+\end{equation}
+
+\paragraph{State of Charge (SOC) Dynamics}
+SOC is defined as the ratio of the current remaining capacity to the nominal capacity. 
+Its change rate is directly proportional to the current:
+\begin{equation}
+\frac{d\text{SOC}}{dt} = -\frac{\eta I(t)}{C_n \cdot \text{SOH}}
+\label{eq:dsoc}
+\end{equation}
+where $\eta$ denotes the Coulombic efficiency, typically set to $\eta=1$ during discharge, implying ideal conditions 
+without side reactions; $C_n$ is the nominal battery capacity (Ah); and $\text{SOH}$ represents the State of Health, 
+defined as the ratio of the current effective capacity to the nominal capacity, quantifying the degree of capacity fade.
+
+\paragraph{Output Voltage Equation}
+The terminal voltage $V_t(t)$ of the battery is the open-circuit voltage minus all internal voltage drops:
+\begin{equation}
+V_t(t) = V_{\text{oc}}(\text{SOC}) - I(t)R_0(\text{SOC}) - V_{p1}(t) - V_{p2}(t)
+\label{eq:vt}
+\end{equation}
+
+\paragraph{Power Constraint}
+Under the preset conditions, we assume that the battery is discharged at a constant power $P_0$, 
+with the current $I(t)$ and terminal voltage $V_t(t)$ satisfying:
+\begin{equation}
+I(t) = \frac{P_0}{\eta_{\text{conv}} V_t(t)}
+\label{eq:i_const_power}
+\end{equation}
+where $\eta_{\text{conv}}$ denotes the power conversion efficiency. 
+Equations \eqref{eq:vt} and \eqref{eq:i_const_power} form a closed loop, 
+resulting in a differential-algebraic equation system (DAE).
+
+\subsection{Model Solution}
+
+\subsubsection{Algebraic Loop Elimination}
+To solve the DAE system numerically, we need to eliminate the algebraic loop. 
+Substituting Equation \eqref{eq:i_const_power} into Equation \eqref{eq:vt} gives:
+\begin{equation}
+V_t = V_{\text{oc}}(\text{SOC}) - \frac{P_0 R_0(\text{SOC})}{\eta_{\text{conv}} V_t} - V_{p1} - V_{p2}
+\end{equation}
+After rearranging, we obtain a quadratic equation in $V_t$:
+\begin{equation}
+V_t^2 - \big[V_{\text{oc}}(\text{SOC}) - V_{p1} - V_{p2}\big] V_t + \frac{P_0 R_0(\text{SOC})}{\eta_{\text{conv}}} = 0
+\label{eq:quadratic_vt}
+\end{equation}
+The solutions of Equation \eqref{eq:quadratic_vt} are:
+\begin{equation}
+V_t = \frac{\big[V_{\text{oc}}(\text{SOC}) - V_{p1} - V_{p2}\big] \pm \sqrt{\big[V_{\text{oc}}(\text{SOC}) - V_{p1} - V_{p2}\big]^2 - \dfrac{4P_0 R_0(\text{SOC})}{\eta_{\text{conv}}}}}{2}
+\label{eq:vt_solution}
+\end{equation}
+According to physical meaning, we choose the "+" sign corresponding to the higher voltage solution when the discriminant is positive. 
+When the discriminant is negative, it indicates that the battery cannot provide the required power $P_0$.
+
+\subsubsection{Pure Differential Equation System}
+Substituting Equation \eqref{eq:vt_solution} into Equation \eqref{eq:i_const_power} gives the current expression:
+\begin{equation}
+I(t) = \frac{P_0}{\eta_{\text{conv}} V_t(\text{SOC}, V_{p1}, V_{p2})}
+\end{equation}
+Thus, we can transform the original DAE system into a standard ordinary differential equation (ODE) system:
+\begin{equation}
+\begin{cases}
+\dfrac{d\text{SOC}}{dt} = -\dfrac{\eta P_0}{C_n \cdot \text{SOH} \cdot \eta_{\text{conv}} V_t(\text{SOC}, V_{p1}, V_{p2})} \\[10pt]
+\dfrac{dV_{p1}}{dt} = \dfrac{P_0}{C_1 \eta_{\text{conv}} V_t(\text{SOC}, V_{p1}, V_{p2})} - \dfrac{V_{p1}}{R_1 C_1} \\[10pt]
+\dfrac{dV_{p2}}{dt} = \dfrac{P_0}{C_2 \eta_{\text{conv}} V_t(\text{SOC}, V_{p1}, V_{p2})} - \dfrac{V_{p2}}{R_2 C_2}
+\end{cases}
+\label{eq:ode_system}
+\end{equation}
+Where $V_t(\cdot)$ is defined by Equation \eqref{eq:vt_solution}. 
+The state variables of the system are $\mathbf{x} = [\text{SOC}, V_{p1}, V_{p2}]^\top$.
+
+\subsubsection{Numerical Solution Algorithm}
+To solve the ODE system \eqref{eq:ode_system}, we use two time-discretization methods: 
+the explicit Euler method (first-order accuracy) and the classic Runge-Kutta method of order 4 (RK4, fourth-order accuracy). 
+The Euler method is simple but has limited accuracy, while RK4 has higher accuracy but requires more computational effort.
+
+\paragraph{Explicit Euler Method}
+By discretizing the time domain: $t_k = k\Delta t, k=0,1,2,\dots$, the state update formula of the explicit Euler method is:
+\begin{equation}
+\begin{cases}
+\text{SOC}_{k+1} = \text{SOC}_k - \dfrac{\eta P_0 \Delta t}{C_n \cdot \text{SOH} \cdot \eta_{\text{conv}} V_{t,k}} \\[10pt]
+V_{p1,k+1} = V_{p1,k} + \Delta t \left( \dfrac{P_0}{C_1 \eta_{\text{conv}} V_{t,k}} - \dfrac{V_{p1,k}}{R_1 C_1} \right) \\[10pt]
+V_{p2,k+1} = V_{p2,k} + \Delta t \left( \dfrac{P_0}{C_2 \eta_{\text{conv}} V_{t,k}} - \dfrac{V_{p2,k}}{R_2 C_2} \right)
+\end{cases}
+\label{eq:euler}
+\end{equation}
+Where $V_{t,k}$ is computed at time $t_k$ using Equation \eqref{eq:vt_solution}.
+
+\paragraph{Runge-Kutta Method of Order 4 (RK4)}
+By defining the right-hand side function $\mathbf{f}(\mathbf{x})$ as in Equation \eqref{eq:ode_system}, 
+the single-step update formula of RK4 is:
+\begin{equation}
+\begin{aligned}
+\mathbf{k}_1 &= \Delta t \cdot \mathbf{f}(\mathbf{x}_k), \\
+\mathbf{k}_2 &= \Delta t \cdot \mathbf{f}\left(\mathbf{x}_k + \frac{\mathbf{k}_1}{2}\right), \\
+\mathbf{k}_3 &= \Delta t \cdot \mathbf{f}\left(\mathbf{x}_k + \frac{\mathbf{k}_2}{2}\right), \\
+\mathbf{k}_4 &= \Delta t \cdot \mathbf{f}\left(\mathbf{x}_k + \mathbf{k}_3\right), \\
+\mathbf{x}_{k+1} &= \mathbf{x}_k + \frac{1}{6}(\mathbf{k}_1 + 2\mathbf{k}_2 + 2\mathbf{k}_3 + \mathbf{k}_4)
+\end{aligned}
+\label{eq:rk4}
+\end{equation}
+
+\subsection{Power Consumption Model}
+Given that the power demand in real-world scenarios is not constant, we account for time-varying power by coupling 
+a power consumption model with the battery model. The total power consumption \(P(t)\) of a smartphone at time \(t\) 
+can be expressed as the linear superposition of contributions from all active hardware components:
+\begin{equation}
+P(t) = P_{\text{basic}} + \sum_{i \in \mathcal{C}} \sum_{k \in \mathcal{V}_i} \left[ c_{i,k}(t) \times \alpha_{i,k} \right]
+\label{eq:total_power}
+\end{equation}
+
+\begin{itemize}
+    \item $P_{\text{basic}}$ denotes the baseline power consumption when the device is active, covering essential operating system services and minimal hardware overhead.
+
+    \item $\mathcal{C}$ represents the set of all hardware components:
+          $\mathcal{C} = \{\text{CPU}, \text{Screen}, \text{RAM}, etc.\}$.
+
+    \item $\mathcal{V}_i$ is the set of system variables associated with component $i$.
+
+    \item $\alpha_{i,k}$ is the power correlation coefficient for the $k$-th system variable of component $i$.
+
+    \item $c_{i,k}(t)$ denotes the value of the $k$-th system variable of component $i$ at time $t$.
+\end{itemize}
+
+This modular modeling approach allows the contribution of each component to be independently analyzed, calibrated, and updated. 
+Specific parameter values are listed in Table \ref{tab:hardware_power_coeff} \cite{Su2015}, where the 5G data are derived by 
+calibrating the original 3G measurements against contemporary benchmarks \cite{Ookla2023}.
+\begin{table}[H]
+\centering
+\caption{Power Consumption Coefficients of Hardware Components}
+\label{tab:hardware_power_coeff}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{lcc||lcc}
+\toprule
+\textbf{Hardware Component} & \textbf{System Variable} & \textbf{Coefficient \(c\) (mW)} & \textbf{Hardware Component} & \textbf{System Variable} & \textbf{Coefficient \(c\) (mW)} \\
+\midrule
+CPU          & util         & 15.936  & Phone       & callState   & 753.0       \\
+\midrule
+Screen       & brightness   & 4.500   & Phone       & call\_Rssi  & 90.0        \\
+\midrule
+Memory       & util         & 0.156   & GPS         & GPS\_On     & 9.0         \\
+\midrule
+Flash        & readSpeed    & 0.012   & Audio       & volume      & 10.47       \\
+Flash        & writeSpeed   & 0.021   & Audio       & headset     & 66.0        \\
+\midrule
+WiFi         & wifi\_On     & 141.66  & 5G          & 5G\_Rssi    & 3.0         \\
+WiFi         & wifi\_Rssi   & 0.12    & 5G          & 5G\_On      & 1148.4      \\
+WiFi         & linkSpeed    & 1272.0  & Bluetooth   & blue\_On    & 185.4       \\                                                   
+\midrule
+Camera       & camera\_On   & 2218.2  & System      & System\_On  & 716.4       \\
+\bottomrule
+\end{tabular}
+}
+\vspace{-0.3cm}
+\end{table}
+\subsection{Results and Analysis}
+\subsubsection{Battery Discharge Characteristics in Typical Usage Scenarios}
+
+By numerically solving the continuous-time battery model and integrating it with the power consumption model, SOC versus time curves under various real-world usage scenarios were obtained.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{SOC_Time_Comparison_SCI_v2.png}
+\caption{Battery discharge curves under five typical usage scenarios.}
+\label{fig:discharge_curves}
+\end{figure}
+
+Figure \ref{fig:discharge_curves} presents the SOC-t curves for five typical scenarios, with the following key characteristics:
+
+\begin{enumerate}[label=\alph*), leftmargin=2\parindent]
+    \item \textbf{Standby Mode:} The curve exhibits the slowest decline, indicating a battery life of approximately 19 hours with an SOC depletion rate of 5.2\% per hour.
+    \item \textbf{Web Browsing:} Representing a moderate power consumption scenario, the discharge time is about 7 hours, corresponding to an SOC depletion rate of 14.3\% per hour.
+    \item \textbf{4K Video Streaming:} A high power consumption scenario resulting in a discharge time of approximately 2 hours.
+    \item \textbf{Heavy Gaming:} A high power consumption scenario with a discharge time of about 1.5 hours.
+    \item \textbf{Video Conferencing:} A sustained high-power scenario leading to a discharge time of about 1.2 hours.
+\end{enumerate}
+
+\subsubsection{Battery Performance Under a Realistic Daily Usage Pattern}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{realistic_daily_usage.png}
+\caption{Battery discharge curve under a simulated realistic daily usage pattern.}
+\label{fig:daily_usage}
+\end{figure}
+
+A 24-hour usage pattern for a typical user, from 7:00 AM to 7:00 AM the next day, was simulated. The results are shown in Figure \ref{fig:daily_usage}.
+
+\noindent \textbf{Key Findings:}
+\begin{enumerate}[label=\arabic*), leftmargin=2\parindent]
+    \item \textbf{Time to Battery Depletion:} 23.5 hours (less than 24 hours), indicating that under the simulated usage pattern, the smartphone requires daily charging. This result aligns with the common experience of most users.
+    \item \textbf{Usage Pattern Distribution:}
+    \begin{itemize}
+        \item \textbf{Sleep Period (7 hours):} Power consumption ranged between 0.12-0.15 W, with an SOC decrease of only about 1\%, demonstrating highly effective power management in deep sleep state.
+        \item \textbf{Work Period (9 hours):} Average power consumption was 1.5 W, leading to an SOC decrease of approximately 40\%. Activities included intermittent communication, information browsing, and short breaks.
+        \item \textbf{Entertainment Period (4 hours):} Average power consumption peaked at 3.5 W, causing an SOC decrease of about 45\%. This period involved high-power activities such as gaming and video streaming.
+    \end{itemize}
+    \item \textbf{High Power Consumption Intervals:}
+    \begin{itemize}
+        \item \textbf{Lunch Break (12:00-13:00):} SOC decreased by 8\%, primarily due to short video viewing and casual gaming.
+        \item \textbf{Evening Entertainment (19:00-22:00):} SOC decreased significantly by 35\%, dominated by extended gaming and video streaming sessions.
+    \end{itemize}
+    \item \textbf{Variation in Discharge Rate:} The maximum discharge rate of 15\% per hour occurred during the evening gaming session. In contrast, the discharge rate during sleep dropped to 0.14\% per hour—a difference exceeding two orders of magnitude.
+\end{enumerate}
+
+\subsubsection{Comparative Analysis of Power Consumption Across Scenarios}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.95\textwidth]{scenario_power_comparison.png}
+\caption{Comparison of power consumption across different usage scenarios.}
+\label{fig:power_comparison}
+\end{figure}
+
+Figure \ref{fig:power_comparison} provides a comparison of power consumption for various scenarios, with the principal findings summarized below:
+
+\begin{enumerate}[label=\alph*), leftmargin=2\parindent]
+    \item \textbf{Highest Power Consumption Activities:} Video recording (1080p)> heavy gaming > video conferencing > video streaming. The high power demand in gaming and recording is primarily attributed to sustained high GPU load.
+    \item \textbf{Medium Power Consumption Activities:} Navigation > photography > 1080p video streaming. The significant power draw during navigation results from continuous screen operation at high brightness and sustained GPS activity.
+    \item \textbf{Low Power Consumption Activities:} Voice calls> Web browsing > iMessage communication. These activities are characterized by intermittent CPU and network usage.
+    \item \textbf{Standby Power Consumption:} This represents the lowest power state, consuming merely 4\% of the power required by intensive gaming. This indicates that power management in idle states is highly optimized in modern smartphones.
+\end{enumerate}
+
+\noindent \textbf{Power Composition Analysis:} For the intensive gaming scenario, the power consumption is primarily distributed as follows: screen (30\%), GPU (30\%), CPU (25\%), and other components (10\%). Reducing screen brightness can significantly decrease the total power consumption.

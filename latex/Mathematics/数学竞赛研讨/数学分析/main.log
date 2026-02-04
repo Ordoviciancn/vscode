@@ -1,10 +1,10 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.4.3)  27 AUG 2025 19:25
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.4.3)  23 SEP 2025 12:38
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**v:/vscode/latex/Mathematics/数学竞赛研讨/main
-(v:/vscode/latex/Mathematics/数学竞赛研讨/main.tex
+**v:/vscode/latex/Mathematics/数学竞赛研讨/数学分析/main
+(v:/vscode/latex/Mathematics/数学竞赛研讨/数学分析/main.tex
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
 (./MathNoteCN.cls
@@ -762,40 +762,7 @@ Library (tcolorbox): 'tcbskinsjigsaw.code.tex' version '6.4.1'
 \c@tcb@cnt@theorem=\count355
 \c@tcb@cnt@definition=\count356
 \c@tcb@cnt@example=\count357
- (v:/texlive/2025/texmf-dist/tex/latex/background/background.sty
-Package: background 2014/03/04 v2.1 background material
- (v:/texlive/2025/texmf-dist/tex/latex/xkeyval/xkeyval.sty
-Package: xkeyval 2022/06/16 v2.9 package option processing (HA)
- (v:/texlive/2025/texmf-dist/tex/generic/xkeyval/xkeyval.tex (v:/texlive/2025/texmf-dist/tex/generic/xkeyval/xkvutils.tex
-\XKV@toks=\toks45
-\XKV@tempa@toks=\toks46
-)
-\XKV@depth=\count358
-File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
-)) (v:/texlive/2025/texmf-dist/tex/latex/everypage/everypage.sty
-Package: everypage 2020/10/17 R2.0b Hooks to run on every page
-
-
-Package everypage Warning: Functionality similar to this package has recently
-(everypage)                been implemented in LaTeX. This package is now in
-(everypage)                legacy status.
-(everypage)                Please, don't use it in new documents and packages.
-
-
-Package everypage Warning: You appear to be running a version of LaTeX
-(everypage)                providing the new functionality.
-(everypage)                Doing the best to deliver the original `everypage`
-(everypage)                interface on top of it. Strict equivalence is
-(everypage)                not possible, breakage may occur.
-(everypage)                If truly needed, Use `everypage-1x` to force the
-(everypage)                loading of an older code base.
-
-) (v:/texlive/2025/texmf-dist/tex/latex/tools/afterpage.sty
-Package: afterpage 2023/07/04 v1.08 After-Page Package (DPC)
-\AP@output=\toks47
-\AP@partial=\box85
-\AP@footins=\box86
-))) (./main.aux)
+) (./main.aux)
 \openout1 = `main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 10.
@@ -940,24 +907,15 @@ LaTeX Font Warning: Font shape `TU/KaiTi(0)/m/it' undefined
 (Font)              using `TU/KaiTi(0)/m/n' instead on input line 18.
 
 
-Overfull \hbox (73.51964pt too wide) detected at line 29
-[] \OT1/cmr/m/n/10.53937 = [][] \OMS/cmsy/m/n/10.53937 ^^U []\OML/cmm/m/it/10.53937 :
- []
 
-
-
-File: trans_logo.png Graphic file (type bmp)
-<trans_logo.png>
 [1
 
 ]
 
 
 LaTeX Font Warning: Font shape `TU/KaiTi(0)/m/sl' undefined
-(Font)              using `TU/KaiTi(0)/m/n' instead on input line 54.
+(Font)              using `TU/KaiTi(0)/m/n' instead on input line 66.
 
-File: trans_logo.png Graphic file (type bmp)
-<trans_logo.png>
 [2] (./main.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
@@ -975,12 +933,12 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 060A04D428CB0F52B73C1ABA7411BCF5;99.
  ) 
 Here is how much of TeX's memory you used:
- 31790 strings out of 473832
- 707317 string characters out of 5733159
- 1131212 words of memory out of 5000000
- 54291 multiletter control sequences out of 15000+600000
+ 31397 strings out of 473832
+ 699963 string characters out of 5733159
+ 1124105 words of memory out of 5000000
+ 53921 multiletter control sequences out of 15000+600000
  575073 words of font info for 123 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 107i,10n,125p,572b,1280s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 107i,9n,125p,577b,1280s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on main.pdf (2 pages).

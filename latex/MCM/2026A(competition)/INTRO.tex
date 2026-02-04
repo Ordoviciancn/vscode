@@ -1,0 +1,52 @@
+\section{Introduction}
+\subsection{Research Background}
+As the central enabler of modern information society, the performance of smartphones is intrinsically linked to the precise 
+management of their energy system—the lithium-ion battery. Accurate and reliable estimation of the State of Charge (SOC) 
+constitutes a critical technical challenge for ensuring battery safety, optimizing energy management strategies, 
+and enhancing user experience. Current research on battery modeling and state estimation primarily follows two distinct 
+technical pathways: one is based on physical electrochemical models \cite{Zan2023}, which offer high descriptive accuracy 
+but are computationally intensive; the other relies on empirical equivalent circuit models \cite{Guo2021, Zhao2022}. 
+These models simulate the macroscopic dynamic response of batteries by constructing electrical networks composed of 
+lumped elements such as voltage sources, resistors, and capacitors, and are frequently combined with Kalman 
+filter-based algorithms \cite{Kalman1960} for state estimation. Owing to their clear physical interpretation 
+and moderate computational complexity, equivalent circuit models have become the most widely adopted solution in 
+practical Battery Management Systems (BMS).
+
+To further enhance model accuracy and algorithmic robustness under complex operating conditions, recent research 
+has focused on deepening the exploration of the physical underpinnings and application boundaries of equivalent circuit models:
+
+\textbf{Venegas et al.} \cite{Venegas2022} introduced the hysteresis effect of the open-circuit voltage into the model, 
+aligning the dynamic response of the polarization process more closely with the nonlinear behavior of actual batteries. 
+This work provides a significant reference for refining polarization voltage modeling in second-order RC models.
+
+\textbf{Mu et al.} \cite{Mu2017} employed fractional calculus theory to characterize the relaxation processes of batteries, 
+expanding the descriptive capacity of equivalent circuit models for complex battery dynamics. Their approach offers a novel 
+perspective for optimizing the identification of time constants in polarization elements.
+
+\textbf{Xiong et al.} \cite{Xiong2021} enhanced the adaptability of equivalent circuit models to battery aging 
+by integrating capacity degradation models, demonstrating the feasibility and effectiveness of incorporating State of Health 
+(SOH) corrections within the equivalent circuit framework.
+
+In summary, state estimation methods based on equivalent circuit models have demonstrated considerable potential 
+for addressing complex real-world scenarios. These recent advancements lay a solid theoretical and technical foundation 
+for the present study, which aims to construct a continuous-time "Second-Order RC Equivalent Circuit" model that incorporates 
+the coupled dynamics of power consumption.
+
+\subsection{Problem Statement}
+The operational power consumption of smartphones exhibits highly dynamic and uncertain characteristics, influenced by the coupled effects of multiple factors such as screen brightness, Central Processing Unit (CPU) load, wireless communication module activity, background applications, and ambient temperature. Against this backdrop, constructing a mathematical model that can precisely describe the continuous-time evolution of battery SOC under realistic usage conditions, and subsequently enabling reliable prediction of the remaining battery depletion time across various typical usage scenarios, emerges as a critical problem to be solved.
+
+In accordance with the stated requirements, this study is tasked with addressing the following specific problems:
+\begin{enumerate}
+    \item \textbf{Problem 1}: Establish a dynamic lithium-ion battery model based on continuous-time differential equations. 
+    This model must accurately characterize evolution of battery SOC with other factors.
+    \item \textbf{Problem 2}: Calculate or approximate the depletion time under various initial SOC levels and usage scenarios 
+    based on the model. Compare the prediction results with observed or reasonable behaviors, quantify the associated uncertainties, 
+    and identify conditions under which the model performs well or poorly.
+    \item \textbf{Problem 3}: Systematically evaluate the impact of key model parameters and different usage patterns (e.g., fluctuating power levels) on the predicted battery depletion time, 
+    thereby quantifying the sources of model uncertainty.
+    \item \textbf{Problem 4}: Translate your findings into practical recommendations for a cellphone user and 
+    consider how battery aging reduces effective capacity or how your modeling framework could generalize to other portable devices.
+\end{enumerate}
+
+This study will proceed by addressing the objectives outlined above, striving to establish an effective bridge between theoretical 
+modeling and engineering application.

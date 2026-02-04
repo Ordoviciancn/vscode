@@ -1,0 +1,63 @@
+\section{Problem 3: Sensitivity Analysis and Robustness Assessment}
+\label{sec:sensitivity}
+
+To evaluate the reliability of the proposed Second-Order RC model under parameter perturbations and extreme operating conditions, we conducted a comprehensive sensitivity analysis. This section investigates the non-linear coupling effects between load power and battery capacity, quantifies the uncertainty arising from manufacturing tolerances using Monte Carlo simulations, and validates the model's dynamic response under realistic scenarios.
+
+\subsection{Non-linear Impact of Power Load}
+The sensitivity of the Time-to-Empty (TTE) prediction to variations in power load is illustrated in Figure \ref{fig:power_sens}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{TTE_Simulation_Results/Fig2_Power_Sensitivity.png}
+    \caption{Sensitivity analysis of TTE with respect to Power Load ($P$). (a) Comparison between model prediction and theoretical energy-based estimation; (b) Log-log scale relationship; (c) Normalized TTE indicating efficiency loss; (d) Gradient analysis showing sensitivity variations.}
+    \label{fig:power_sens}
+\end{figure}
+
+As shown in Figure \ref{fig:power_sens}(a), TTE generally follows the inverse power law ($TTE \propto P^{-1}$). 
+However, Figure \ref{fig:power_sens}(d) reveals that the system is extremely sensitive in the low-power region 
+(Sensitivity $>100\%/W$ at 0.8W), implying that background optimization yields the highest marginal gain.
+
+\subsection{Capacity-Power Coupling Trade-off}
+We further explored the interplay between battery capacity ($C$) and power load, as presented in Figure \ref{fig:capacity_sens}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{TTE_Simulation_Results/Fig3_Capacity_Sensitivity.png}
+    \caption{Sensitivity analysis of TTE with respect to Battery Capacity ($C$)}
+    \label{fig:capacity_sens}
+\end{figure}
+
+Collectively, these figures demonstrate that Time-to-Empty (TTE) increases linearly with battery capacity across all power loads, though the growth rate is significantly dampened at higher power levels. Normalized TTE analysis confirms this linear relationship is universal, while sensitivity curves reveal that capacity improvements yield greater relative gains in TTE for smaller-capacity batteries. The capacity-power trade-off surface further illustrates that longer TTE is achieved by combining higher capacity with lower power, offering a clear quantitative basis for optimizing battery-life management.
+
+\subsection{Uncertainty Quantification via Monte Carlo Simulation}
+To account for the stochastic nature of battery manufacturing (e.g., variations in $R_0$, $C$, and aging effects), we performed a Monte Carlo simulation with $N=500$ iterations. The parameters were sampled from normal distributions centered at nominal values with a 5-10\% standard deviation.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{TTE_Simulation_Results/Fig4_MonteCarlo_Uncertainty.png}
+    \caption{Uncertainty quantification. (a) Histogram and KDE of predicted TTE; (b) Cumulative Distribution Function (CDF) showing confidence intervals.}
+    \label{fig:monte_carlo}
+\end{figure}
+The Monte Carlo simulation ($N=500$) results are presented in Figure \ref{fig:monte_carlo}.
+The TTE distribution is approximately normal with a mean of \textbf{3.75 hours} and a standard deviation of \textbf{0.43 hours}. The 90\% confidence interval spans from \textbf{3.09 h to 4.53 h}. 
+The distribution exhibits a slight right skew, and the notable gap between the 95th percentile and the mean underscores the necessity of using conservative estimates in reliable power management systems.
+
+Finally, we validated the model's transient behavior under dynamic loading conditions, which represent real-world usage more accurately than constant-power tests.
+
+Figure \ref{fig:scenarios}(a) highlights the voltage sags during the "Gaming" scenario (red curve). Unlike the smooth decline in "Streaming," the high-frequency load variations cause instantaneous voltage drops. If these drops hit the cutoff voltage, the device may shut down even if the State of Charge (SOC) is above 0\%, a phenomenon known as "voltage collapse."
+
+Figure \ref{fig:validation} further confirms the model's fidelity. The voltage relaxation observed after power steps (Figure \ref{fig:validation}(b)) is perfectly captured by the two RC time constants ($\tau_1, \tau_2$), demonstrating that our model correctly accounts for the diffusion and charge-transfer delays that are critical for accurate TTE prediction in dynamic environments.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{TTE_Simulation_Results/Fig5_Scenario_Comparison.png}
+    \caption{Simulation of diverse usage scenarios. (a) Terminal voltage response; (c) Dynamic power profiles including Gaming, Streaming, and Idle.}
+    \label{fig:scenarios}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{TTE_Simulation_Results/Fig6_Model_Validation.png}
+    \caption{Model validation via Step Response}
+    \label{fig:validation}
+\end{figure}

@@ -25,10 +25,21 @@
 		假设 $ P(2^{k}) $ 成立，即对于任意的正数 $ a_1, a_2, \ldots, a_{2^k} $，都有
 		\[\frac{a_1 + a_2 + \cdots + a_{2^k}}{2^k} \geq \sqrt[2^k]{a_1 a_2 \cdots a_{2^k}}.\]
 
-		那么对于 $ n=2^{k+1} $，我们有
-		\[\frac{a_1 + a_2 + \cdots + a_{2^k} + a_{2^k+1}}{2^{k+1}} =\frac{a_1+a_2+\cdots + a_{2^k}+a_{2^k+1}+}{2}\frac{a_1 + a_2 + \cdots + a_{2^k} + a_{2^k+1}}{2^k} \geq \sqrt[2^{k+1}]{a_1 a_2 \cdots a_{2^k} a_{2^k+1}}.\]
+		那么对于 $ n=2^{k+1} $
 
-		因此，命题 $ P(n) $ 对任意正整数 $ n $ 成立。
+        记$A_1=\dfrac{a_1+a_2+\cdots + a_{2^k}}{2^k}$, $A_2=\dfrac{a_{2^k+1}+\cdots + a_{2^{k+1}}}{2^k}$
+        
+        $G_1=\sqrt[2^k]{a_1a_2\cdots a_3}$, $G_2=\sqrt[2^k]{a_{2^k+1}a_{2^k+2}\cdots a_{2^{k+1}}}$
+		
+        由归纳假设知, $A_1 \geq G_1$, $A_2 \geq G_2$
+
+        $\dfrac{a_1+a_2+\cdots + a_{2^{k+1}}}{2^{k+1}}=\dfrac{A_1+A_2}{2} \geq \sqrt[2]{G_1G_2}=\sqrt[2^{k+1}]{a_1a_2\cdots a_{k+1}}$
+
+        下证对于任何 $n$ 都成立.
+
+        对于任意正整数n, 取最小的m使得$2^m$大于等于n, 构造$2^m$个非负实数: 
+        $a_1=a_2=\cdots =a_{2^m}=0$
+        因此，命题 $ P(n) $ 对任意正整数 $ n $ 成立. 
 	\end{proof}
 	But this immediately implies the following corollary:
 	\begin{corollary}{Riemann's}{}
@@ -51,4 +62,6 @@
 	If, for every $ \epsilon >0 $ there exists some $ \delta >0 $ such $ 0<x-a<\delta $ implies $ |f(x)-L|<\epsilon $ then we say that the function $ f $ has a limit of $ L $ at $ a $ and we write
 	\[\lim_{x\to a}f(x)=L.\]
 	\end{definition}
+
 \end{document}
+

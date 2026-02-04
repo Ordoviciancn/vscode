@@ -1,0 +1,93 @@
+\section{Problem 2: Discharge Time Prediction Under Realistic Conditions}
+
+\subsection{Problem Restatement and Mathematical Formulation}
+The primary objective of this section is to predict the \textit{discharge time} (time-to-empty, TTE) 
+given an arbitrary initial state and a specific usage scenario. Our continuous-time model accounts 
+for the nonlinear voltage drop induced by internal resistance and polarization effects under a 
+constant-power load.
+
+We define the discharge time as the moment the system state first meets a termination criterion. 
+Let the system state be $\mathbf{x}(t) = [\text{SOC}(t), V_{p1}(t), V_{p2}(t)]^T$ and the load power 
+be $P(t)$. Its dynamics are governed by the differential equations derived in Section 1:
+\begin{equation}
+\frac{d\mathbf{x}}{dt} = \mathbf{f}(\mathbf{x}, P(t), \theta)
+\end{equation}
+where $\theta$ represents the battery parameters ($R_0, R_1, C_1$, etc.).
+
+Termination of a single discharge cycle occurs when the state of charge depletes to zero or 
+the terminal voltage falls below a cutoff threshold $V_{\min}$. The terminal voltage $V_{t}(t)$ is 
+an implicit function of the state and load:
+\begin{equation}
+V_{t}(t) = V_{OC}(\text{SOC}(t)) - V_{p1}(t) - V_{p2}(t) - I(t)R_0(\text{SOC}(t)).
+\end{equation}
+Under the constant-power constraint $P(t) = P_{\text{set}}$, the current $I(t)$ couples with the 
+voltage via $I(t) = P_{\text{set}}/V_{t}(t)$. Solving this algebraic loop yields an explicit voltage 
+function $g(\mathbf{x}, P_{\text{set}})$:
+\begin{equation}
+V_{t}(t) = \frac{V_{OC} - V_{p} + \sqrt{(V_{OC} - V_{p})^2 - 4 P_{\text{set}} R_0(\text{SOC})}}{2}
+\end{equation}
+where $V_p = V_{p1} + V_{p2}$.
+
+Consequently, the discharge time prediction problem is formulated as finding the minimum 
+time interval $\mathcal{T}$:
+\begin{equation}
+\mathcal{T}(\text{SOC}_0, P_{\text{set}}) = \inf \{ t > 0 \mid V_{t}(t) \le V_{\min} \ \lor \ \text{SOC}(t) \le 0 \}.
+\end{equation}
+
+\subsection{Numerical Solution and Dynamic Analysis}
+Due to the highly nonlinear OCV-SOC relationship and polarization dynamics, an analytical solution 
+for $\mathcal{T}$ is intractable. We employ a Runge-Kutta (RK45) adaptive time-step integration method 
+to solve this ODE system until the event function $E(t) = V_{t}(t) - V_{\min}$ crosses zero. 
+The results are as follows.
+
+\subsubsection{Voltage Collapse Under High Load}
+A key insight from our model is the distinction between ``energy depletion'' (SOC = 0) 
+and ``voltage collapse'' (voltage < $V_{\min}$). As shown in \textbf{Fig. \ref{fig:voltage_profiles}}, 
+under low power loads (e.g., 0.5 W), the battery discharges completely until SOC nears zero. 
+However, under high power loads, the significant internal resistance drop ($I R_0$) causes the terminal 
+voltage to drop to a lower level compared to low-power scenarios, readily hitting the 3.0 V cutoff 
+threshold early and leaving ``stranded energy'' within the battery.
+
+The dual dynamics of SOC and voltage are further illustrated in \textbf{Fig. \ref{fig:dual_dynamics}}. 
+While SOC declines approximately linearly (resembling an ideal energy reservoir), the voltage exhibits 
+nonlinear curvature due to the diffusion processes modeled by the parallel RC branches.
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.45\linewidth}
+  \centering
+  \includegraphics[width=0.95\linewidth]{Figure_a_Voltage_Profiles.png}
+  \caption{Terminal voltage trajectories under different constant-power loads.}
+  \label{fig:voltage_profiles}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.45\linewidth}
+  \centering
+  \includegraphics[width=0.95\linewidth]{Figure_b_Dual_Axis.png}
+  \caption{Synchronous evolution of SOC and terminal voltage (Load = 3 W).} 
+  \label{fig:dual_dynamics}
+\end{subfigure}
+\end{figure}
+
+\subsection{Comprehensive Discharge Time Prediction Landscape}
+We performed a global analysis across the operational domain, varying the initial SOC from 10\% to 100\% and the constant power load from 0.1 W to 3.0 W.
+
+The results are visualized in the discharge time (TTE) landscape plot (\textbf{Fig. \ref{fig:tte_landscape}}). This contour plot serves as a lookup table for our model, displaying the predicted remaining battery time across different initial SOC values and power levels.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\linewidth]{Figure_c_TTE_Landscape.png}
+\caption{Global discharge time (TTE) prediction landscape}
+\label{fig:tte_landscape}
+\end{figure}
+
+\subsubsection{Analysis of the TTE Prediction Landscape}
+The global discharge time (TTE) prediction landscape in Fig.~\ref{fig:tte_landscape} reveals the coupled effects of initial SOC and constant load power on battery discharge duration. Initial SOC is the dominant factor determining TTE, with discharge time increasing approximately linearly with rising SOC under a fixed power load.
+
+Conversely, load power exerts a nonlinear suppressing effect on TTE, causing it to decrease rapidly as power increases—this trend is particularly pronounced in high-SOC regions. The oblique and increasingly dense contour lines further indicate a nonlinear coupling between initial SOC and load power.
+
+This coupling implies that increasing the initial SOC yields greater marginal benefits for extending TTE in high-power scenarios (e.g., gaming) compared to low-power scenarios (e.g., standby).
+
+Analysis of the boundary behavior identifies the extreme values of TTE: the longest discharge time (~50 hours) occurs at high initial SOC combined with low load power, while the shortest discharge time (<2 hours) is observed at low initial SOC under high load power.
+
+These findings provide a quantitative basis for optimizing smartphone battery life management and also validate the simulation accuracy of the second-order RC model.

@@ -1,0 +1,43 @@
+\section{Problem 4: Practical Implementation and Model Extensions}
+
+Based on the quantitative insights derived from the sensitivity analysis and uncertainty quantification, we translate our theoretical findings into actionable strategies for end-users and operating systems. Furthermore, we analytically extend the framework to account for thermal dynamics and aging effects.
+
+\subsection{User Guidelines: Exploiting the High-Sensitivity Region}
+Our Power Load Sensitivity Analysis Fig.\ref{fig:capacity_sens} reveals a critical insight: \textbf{TTE sensitivity ($\% / W$) is non-linear and peaks at low power loads.} Specifically, the sensitivity at the "Idle" state ($0.8$ W) is over $140\%/W$, whereas it drops to $\sim 10\%/W$ at "Max Load".
+
+\begin{itemize}
+    \item \textbf{High Marginal Utility of Low-Power Optimization:} Users should prioritize reducing "background drain" rather than active heavy tasks. Dimming the screen brightness or switching from 5G to 4G (saving $\sim 0.5$ W) while browsing yields a disproportionately larger extension in battery life compared to lowering graphics settings during gaming.
+    \item \textbf{The "Kill-Switch" Rule:} Since the derivative $|\frac{\partial TTE}{\partial P}|$ is maximized near zero load, disabling unused background sensors (GPS, Bluetooth scanning) provides the most efficient TTE gain per unit of user inconvenience.
+\end{itemize}
+
+\subsection{OS Strategy: Probabilistic Power Management}
+Because of the risk of voltage collapse under high-power operation, we recommend the following two strategies:
+
+\textbf{Confidence-Based UI Display:} Instead of displaying the mean TTE, the OS should display the \textbf{Conservative Prediction (90\% Confidence Level)}. This prevents unexpected shutdowns, aligning user expectations with the worst-case physical reality.
+
+\textbf{Proactive Voltage Governor:} Our 2nd-Order RC model predicts "Voltage Collapse" before SOC depletion. The OS should implement a \textit{Preemptive Throttling} mechanism: when $V_{term}$ approaches the cutoff threshold $V_{cutoff} + \delta$, the system should forcibly throttle CPU frequency to reduce current $I$, thereby reducing the ohmic voltage drop $IR_0$ and instantly recovering terminal voltage to prolong runtime.
+
+\subsection{Model Extension: Analytical Derivation for Temperature and Aging}
+Due to space constraints, we extend our model via analytical derivation rather than numerical simulation. We introduce correction factors to the core TTE equation.
+
+\textbf{1. Temperature Correction (Arrhenius \& Polarization Model):}
+Temperature affects both the Ohmic resistance ($R_0$) and polarization dynamics. Based on the Arrhenius equation, the total effective resistance $R_{tot}(T)$ is:
+\begin{equation}
+    R_{tot}(T) = \underbrace{R_{pol}}_{\text{Polarization}} + R_{ref} \cdot \exp \left[ \frac{E_a}{k_B} \left( \frac{1}{T} - \frac{1}{T_{ref}} \right) \right]
+\end{equation}
+Where $R_{pol} = R_1 + R_2$ represents the steady-state polarization equivalent. The corrected TTE accounts for premature voltage cutoff:
+\begin{equation}
+    TTE_{temp} \approx \underbrace{\frac{C_{nom} \cdot \bar{V}_{oc}}{P_{load}}}_{\text{Ideal TTE}} \cdot \left( 1 - \frac{P_{load} \cdot R_{tot}(T)}{V_{min} \cdot \kappa_{ocv}} \right)
+\end{equation}
+\textbf{Implication:} In cold environments, $R_{tot}(T)$ spikes. The term in parentheses (Derating Factor) decreases significantly, reflecting that the battery hits $V_{min}$ early due to large internal voltage drops ($IR_{tot}$), stranding usable energy.
+
+\textbf{2. Aging Correction (SOH Model):}
+Aging manifests as Capacity Fade and Resistance Growth. We define State of Health ($SOH$) influencing both parameters:
+\begin{equation}
+    C_{aged} = C_{nom} \cdot SOH, \quad R_{aged} = R_{nom} \cdot (1 + \gamma (1-SOH))
+\end{equation}
+Where $\gamma$ is the impedance growth factor affecting both ohmic and polarization parts. The generalized TTE for an aged device is:
+\begin{equation}
+    TTE_{aged} \approx SOH \cdot \frac{E_{nom}}{P_{load}} \cdot \left( 1 - \frac{P_{load} \cdot R_{aged}}{V_{min} \cdot \kappa_{ocv}} \right)
+\end{equation}
+\textbf{Conclusion:} Aging reduces TTE via a "Double Penalty": linearly by scaling down capacity ($SOH$), and non-linearly by increasing the voltage collapse penalty ($R_{aged}$), causing the device to shut down at higher real SOCs.

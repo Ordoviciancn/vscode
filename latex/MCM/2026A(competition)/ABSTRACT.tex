@@ -1,0 +1,12 @@
+\begin{abstract}
+Predicting the Time-to-Empty (TTE) of smartphones is complicated by the nonlinear electrochemical dynamics of Lithium-ion batteries and stochastic user workloads. This paper establishes a robust \textbf{Second-Order Resistance-Capacitance (2nd-Order RC) Equivalent Circuit Model coupled with a dynamic power consumption framework} to bridge the gap between theoretical capacity and real-world endurance.
+
+First, we construct a continuous-time differential equation system that integrates a 7th-order polynomial Open Circuit Voltage (OCV) function with dual polarization branches. Unlike static resistance models, our framework rigorously solves the algebraic loop between terminal voltage and current under constant-power constraints ($P = V \cdot I$). This approach accurately captures the ``voltage collapse'' phenomenon---where terminal voltage hits the cutoff threshold before SOC depletion due to significant ohmic ($IR_0$) and polarization voltage drops during high-power tasks.
+
+Second, we validate the model across diverse realistic scenarios, including Gaming, Streaming, and Idle states. The simulation reveals that TTE is not merely a function of capacity but is governed by a regime-dependent nonlinearity: high-power loads trigger accelerated voltage decay. 
+
+Finally, translating these physical insights into actionable strategies, we propose a \textbf{Confidence-Based Power Management System}. We recommend that Operating Systems (OS) replace mean-based TTE estimates with conservative 90\% confidence intervals to prevent unexpected shutdowns. Furthermore, we suggest a \textbf{Preemptive Voltage Governor} that throttles CPU frequency when terminal voltage approaches the cutoff, actively recovering voltage potential to extend emergency runtime. For users, our analysis confirms that optimizing low-power background tasks yields a significantly higher marginal gain in battery duration than limiting active high-performance usage.
+
+\vspace{1em}
+\noindent \textbf{Keywords:} Second-Order RC Model; Constant-Power Discharge; Time-to-Empty (TTE); Voltage Collapse; Power Management Strategy.
+\end{abstract}
